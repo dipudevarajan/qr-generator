@@ -1,0 +1,18 @@
+# Caddyfile — QRCraft
+# Place this in your Caddy config, or as a standalone Caddyfile
+
+yourdomain.com {
+    root * /var/www/qrcraft
+    file_server
+
+    # Optional: compress responses
+    encode gzip
+
+    # Optional: security headers
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy strict-origin-when-cross-origin
+        -Server
+    }
+}
