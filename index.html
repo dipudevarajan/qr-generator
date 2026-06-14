@@ -3,696 +3,829 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>adfreeqr.com — Free QR Code Generator (No Ads)</title>
-<meta name="description" content="Create beautiful branded QR codes with your logo. Free, ad-free, no sign-up. Generate single URL or multi-link QR codes and host link pages free.">
-<meta name="keywords" content="ad free qr code generator, free qr code, branded qr code, logo qr code, multi-link qr, link page, linktree alternative">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0d0f14;--surface:#151820;--surface2:#1c2030;
-  --border:#252a3a;--border2:#2e3550;
-  --accent:#6c63ff;--accent2:#a78bfa;--accentglow:#6c63ff44;
-  --text:#e8eaf2;--muted:#7880a0;--danger:#f87171;
-  --radius:12px;--radius-lg:18px;
+
+<!-- Primary SEO -->
+<title>Free QR Code Generator — No Ads, No Sign-Up · adfreeqr.com</title>
+<meta name="description" content="Create branded QR codes with your logo. 100% free, no ads, no sign-up, no watermarks. Single URL or multi-link pages. Open source.">
+<meta name="keywords" content="free qr code generator, qr code no ads, qr code with logo free, linktree alternative, multi link qr code, branded qr code, no signup qr generator">
+<link rel="canonical" href="https://adfreeqr.com/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="adfreeqr.com">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://adfreeqr.com/">
+<meta property="og:title" content="Free QR Code Generator — No Ads, No Sign-Up">
+<meta property="og:description" content="Create branded QR codes with your logo. 100% free, no ads, no sign-up, no watermarks. Open source.">
+<meta property="og:image" content="https://adfreeqr.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="adfreeqr.com">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free QR Code Generator — No Ads, No Sign-Up">
+<meta name="twitter:description" content="Create branded QR codes with your logo. 100% free, no ads, no sign-up. Open source.">
+<meta name="twitter:image" content="https://adfreeqr.com/og-image.png">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "adfreeqr.com",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "url": "https://adfreeqr.com/",
+  "description": "Free QR code generator with branded logos, custom colors, and multi-link pages. No ads, no sign-up.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
 }
-body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem}
-header{max-width:960px;margin:0 auto 2.5rem;display:flex;align-items:center;gap:1rem}
-.logo-mark{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 0 20px var(--accentglow)}
-header h1{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.02em}
-header p{font-size:13px;color:var(--muted);margin-top:2px}
-.mode-tabs{max-width:960px;margin:0 auto 1.5rem;display:flex;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px;gap:4px}
-.tab-btn{flex:1;padding:9px 16px;border:none;border-radius:9px;background:transparent;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;transition:all .18s;font-family:inherit}
-.tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 12px var(--accentglow)}
-.tab-btn:not(.active):hover{color:var(--text);background:var(--surface2)}
-.layout{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;max-width:960px;margin:0 auto}
-@media(max-width:680px){.layout{grid-template-columns:1fr}}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem}
-.card-title{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem}
-label{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:5px}
-input[type=text],input[type=url],textarea{width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;resize:none}
-input[type=text]:focus,input[type=url]:focus,textarea:focus{border-color:var(--accent)}
-input::placeholder,textarea::placeholder{color:var(--muted);opacity:.6}
-.field{margin-bottom:1rem}.field:last-child{margin-bottom:0}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.color-row{display:flex;align-items:center;gap:10px}
-input[type=color]{width:36px;height:36px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);cursor:pointer;padding:2px}
-.color-hex{font-size:13px;font-family:monospace;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;width:90px}
-.logo-upload-area{border:2px dashed var(--border2);border-radius:10px;padding:1rem;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;position:relative}
-.logo-upload-area:hover{border-color:var(--accent);background:var(--accentglow)}
-.logo-upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.logo-preview-wrap{display:none;align-items:center;gap:10px}
-.logo-preview-wrap.show{display:flex}
-.logo-preview-img{width:48px;height:48px;border-radius:8px;object-fit:contain;background:#fff}
-.logo-upload-text{font-size:13px;color:var(--muted)}
-.logo-upload-text strong{color:var(--accent);display:block;font-size:14px;margin-bottom:2px}
-.remove-logo{font-size:12px;color:var(--danger);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:inherit}
-.link-row{display:grid;grid-template-columns:100px 1fr auto;gap:6px;align-items:center;margin-bottom:6px}
-.link-row input{margin:0}
-.del-btn{background:none;border:1px solid var(--border);border-radius:7px;color:var(--muted);cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;flex-shrink:0}
-.del-btn:hover{border-color:var(--danger);color:var(--danger);background:#f8717120}
-.add-link-btn{width:100%;padding:8px;background:transparent;border:1px dashed var(--border2);border-radius:8px;color:var(--accent2);font-size:13px;font-weight:500;cursor:pointer;margin-top:6px;transition:all .15s;font-family:inherit}
-.add-link-btn:hover{border-color:var(--accent);background:var(--accentglow)}
-.btn-primary{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;margin-top:1.25rem;font-family:inherit;letter-spacing:.02em;transition:all .18s;box-shadow:0 4px 16px var(--accentglow)}
-.btn-primary:hover{background:#7c73ff;transform:translateY(-1px)}
-.btn-primary:active{transform:translateY(0)}
-.btn-secondary{width:100%;padding:10px;background:var(--surface2);color:var(--text);border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;margin-top:8px;font-family:inherit;transition:all .15s}
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent2)}
-.btn-secondary:disabled{opacity:.35;cursor:not-allowed}
-.btn-secondary:disabled:hover{border-color:var(--border2);color:var(--text)}
-.right-col{display:flex;flex-direction:column;gap:1.25rem}
-.phone-wrap{background:var(--surface2);border-radius:12px;padding:1.25rem;display:flex;justify-content:center}
-.phone{width:200px;background:#fff;border-radius:22px;border:1px solid #ddd;overflow:hidden;color:#111}
-.phone-head{padding:20px 16px 14px;text-align:center;border-bottom:1px solid #f0f0f0}
-.phone-logo-img{width:40px;height:40px;border-radius:9px;object-fit:contain;margin:0 auto 8px;display:none}
-.phone-name{font-size:15px;font-weight:700;color:#111}
-.phone-tagline{font-size:11px;color:#888;margin-top:2px}
-.phone-links{padding:10px 12px}
-.phone-link-item{display:block;padding:9px 12px;border-radius:8px;border:1px solid #eee;margin-bottom:6px;font-size:11px;font-weight:600;color:#111;text-align:center;background:#fafafa;text-decoration:none}
-.single-url-preview{text-align:center;padding:1rem}
-.url-badge{display:inline-block;background:#f0f0f0;border-radius:6px;padding:6px 12px;font-size:11px;color:#555;word-break:break-all;max-width:160px}
-.qr-section{display:flex;flex-direction:column;align-items:center;gap:12px}
-#qr-canvas{border-radius:14px;display:block}
-.qr-hint{font-size:12px;color:var(--muted);text-align:center;line-height:1.6;max-width:220px}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is adfreeqr.com really free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. 100% free, no sign-up, no credit card, no upgrade prompts, no watermarks. The source code is on GitHub under the MIT license." }},
+    { "@type": "Question", "name": "Do my QR codes expire?", "acceptedAnswer": { "@type": "Answer", "text": "No. QR codes generated here encode the URL directly. They work forever, even if our site disappears." }},
+    { "@type": "Question", "name": "Can I add my logo to the QR code?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Upload any PNG, SVG, or JPG and we place it in the center of the QR code. Error correction is set to high, so the code still scans reliably." }},
+    { "@type": "Question", "name": "What is a multi-link page?", "acceptedAnswer": { "@type": "Answer", "text": "A small landing page with multiple links - like a Linktree page. You build one with your name, logo, and links, and we host it for free on adfreeqr.com or you can download the HTML to host yourself." }},
+    { "@type": "Question", "name": "Do you track me?", "acceptedAnswer": { "@type": "Answer", "text": "We count anonymous events (which type of QR was generated, which country it came from). We never store raw IP addresses, never use cookies, and never sell data." }},
+    { "@type": "Question", "name": "Is the QR generated on my device or your server?", "acceptedAnswer": { "@type": "Answer", "text": "Entirely in your browser. We never see your URLs or logos. Open the page and disconnect from the internet - the generator still works." }}
+  ]
+}
+</script>
 
-/* contrast warning */
-.contrast-warn{display:none;background:#f8717122;border:1px solid var(--danger);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--danger);margin-top:8px}
-.contrast-warn.show{display:block}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-.info-box{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);line-height:1.7}
-.info-box strong{color:var(--accent2)}
-.step-num{display:inline-block;width:18px;height:18px;background:var(--accent);color:#fff;border-radius:50%;font-size:10px;font-weight:700;text-align:center;line-height:18px;margin-right:5px}
-.mode-panel{display:none}.mode-panel.active{display:block}
-.divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
-footer{text-align:center;margin-top:3rem;font-size:12px;color:var(--muted)}
-footer a{color:var(--accent2);text-decoration:none}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 
-/* hosting mode toggle */
-.host-toggle{display:flex;flex-direction:column;gap:8px}
-.host-opt{display:flex;gap:10px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);cursor:pointer;transition:all .15s;align-items:flex-start}
-.host-opt:hover{border-color:var(--border2)}
-.host-opt.active{border-color:var(--accent);background:var(--accentglow)}
-.host-opt input[type=radio]{margin-top:2px;flex-shrink:0;accent-color:var(--accent)}
-.host-opt strong{display:block;font-size:13px;color:var(--text);margin-bottom:2px}
-.host-opt span{font-size:11px;color:var(--muted);line-height:1.5}
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:        #FFFFFF;
+  --surface:   #FAFAFA;
+  --text:      #0A0A0A;
+  --text-soft: #6B6B6B;
+  --border:    #E5E5E5;
+  --accent:    #FF3C00;
+  --black:     #000000;
+  --display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --body:    'Inter', system-ui, sans-serif;
+  --mono:    'JetBrains Mono', ui-monospace, monospace;
+}
 
-.generated-url{background:var(--surface2);border:1px solid var(--accent);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:12px;color:var(--accent2);word-break:break-all;line-height:1.5}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+img, svg { max-width: 100%; display: block; }
+a { color: inherit; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-soft);
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 18px;
+}
+.eyebrow::before {
+  content: '';
+  width: 14px; height: 14px;
+  background: var(--black);
+  flex-shrink: 0;
+  clip-path: polygon(0 0,40% 0,40% 40%,0 40%, 0 60%, 40% 60%, 40% 100%, 60% 100%, 60% 60%, 100% 60%, 100% 40%, 60% 40%, 60% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Nav */
+nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+nav .inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.brand-mark {
+  width: 22px; height: 22px;
+  background: var(--black);
+  position: relative;
+  flex-shrink: 0;
+}
+.brand-mark::before, .brand-mark::after, .brand-mark span {
+  content: ''; position: absolute;
+  width: 6px; height: 6px; background: #fff;
+}
+.brand-mark::before { top: 4px; left: 4px; }
+.brand-mark::after  { top: 4px; right: 4px; }
+.brand-mark span { bottom: 4px; left: 4px; }
+
+.nav-links { display: flex; gap: 28px; align-items: center; font-size: 14px; }
+.nav-links a { color: var(--text-soft); text-decoration: none; transition: color .15s; }
+.nav-links a:hover { color: var(--text); }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  background: var(--text);
+  color: #fff !important;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--text);
+  transition: all .18s;
+  font-family: var(--body);
+  cursor: pointer;
+}
+.btn:hover { background: var(--accent); border-color: var(--accent); color: #fff !important; }
+.btn.btn-lg { padding: 16px 28px; font-size: 16px; }
+.btn.btn-outline { background: transparent; color: var(--text) !important; }
+.btn.btn-outline:hover { background: var(--text); color: #fff !important; }
+.btn.btn-accent { background: var(--accent); border-color: var(--accent); }
+.btn.btn-accent:hover { background: var(--text); border-color: var(--text); }
+@media(max-width:680px){ .nav-links a:not(.btn) { display: none; } }
+
+/* Hero */
+.hero { padding: 100px 0 80px; position: relative; }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(48px, 7vw, 86px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 28px;
+}
+.hero h1 .accent { color: var(--accent); white-space: nowrap; }
+.hero h1 .strike { position: relative; white-space: nowrap; color: var(--text-soft); }
+.hero h1 .strike::after {
+  content: ''; position: absolute;
+  left: -2%; right: -2%; top: 52%;
+  height: 0.12em;
+  background: var(--accent);
+  transform: rotate(-3deg);
+}
+.hero p.lede {
+  font-size: 19px;
+  color: var(--text-soft);
+  max-width: 480px;
+  margin-bottom: 36px;
+  line-height: 1.55;
+}
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+.hero-meta {
+  display: flex; gap: 24px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-soft);
+  flex-wrap: wrap;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta span::before { content: '✓'; color: var(--accent); font-weight: 700; }
+
+.qr-panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 32px;
+  position: relative;
+  aspect-ratio: 1;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.qr-panel::before {
+  content: 'SCAN ME';
+  position: absolute; top: -10px; left: 24px;
+  background: var(--accent); color: #fff;
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  padding: 4px 8px; letter-spacing: 0.1em;
+}
+.qr-panel-corner { position: absolute; width: 14px; height: 14px; border: 2px solid var(--black); }
+.qr-panel-corner.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.qr-panel-corner.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.qr-panel-corner.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.qr-panel-corner.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+#hero-qr-canvas { width: 100%; height: auto; flex: 1; }
+.qr-panel-caption {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--text-soft); text-align: center;
+  margin-top: 16px; letter-spacing: 0.04em;
+}
+@media(max-width: 880px){
+  .hero { padding: 60px 0 40px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .qr-panel { max-width: 320px; margin: 0 auto; }
+}
+
+/* Stats bar */
+.stats-bar { background: var(--black); color: #fff; padding: 28px 0; }
+.stats-bar .inner {
+  display: flex; justify-content: space-around; gap: 24px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.05em;
+}
+.stats-bar .stat-item { display: flex; align-items: center; gap: 10px; }
+.stats-bar .num {
+  font-family: var(--display); font-weight: 800; font-size: 28px;
+  color: var(--accent); letter-spacing: -0.02em;
+}
+.stats-bar .label { color: rgba(255,255,255,0.7); text-transform: uppercase; font-size: 11px; }
+
+/* Section */
+section.block { padding: 96px 0; border-bottom: 1px solid var(--border); }
+section.block h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(34px, 4.5vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+  max-width: 780px;
+}
+section.block .section-lede {
+  font-size: 18px;
+  color: var(--text-soft);
+  max-width: 640px;
+  margin-bottom: 56px;
+  line-height: 1.55;
+}
+@media(max-width:680px){ section.block { padding: 64px 0; } }
+
+/* Features grid */
+.features {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.feat {
+  background: var(--bg);
+  padding: 32px;
+  display: flex; flex-direction: column;
+  min-height: 200px;
+}
+.feat > div { display: flex; flex-direction: column; gap: 12px; }
+.feat.big { grid-column: span 4; }
+.feat.medium { grid-column: span 3; }
+.feat.small { grid-column: span 2; }
+.feat-icon {
+  width: 28px; height: 28px;
+  background: var(--black);
+  position: relative;
+  margin-bottom: 8px;
+}
+.feat-icon::after { content: ''; position: absolute; background: var(--bg); inset: 6px; }
+.feat-icon.orange { background: var(--accent); }
+.feat h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 4px;
+}
+.feat.big h3 { font-size: 26px; }
+.feat p { color: var(--text-soft); font-size: 14px; line-height: 1.55; }
+.feat.big p { font-size: 15px; max-width: 480px; }
+@media(max-width:880px) {
+  .features { grid-template-columns: repeat(2, 1fr); }
+  .feat.big, .feat.medium, .feat.small { grid-column: span 2; }
+}
+
+/* Steps */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+}
+.step { padding: 40px 32px; border-right: 1px solid var(--border); }
+.step:last-child { border-right: none; }
+.step-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 28px;
+  display: block;
+}
+.step h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+.step p { color: var(--text-soft); font-size: 14px; line-height: 1.6; }
+@media(max-width:680px){
+  .steps { grid-template-columns: 1fr; }
+  .step { border-right: none; border-bottom: 1px solid var(--border); }
+  .step:last-child { border-bottom: none; }
+}
+
+/* Compare table */
+.compare-wrap { overflow-x: auto; }
+.compare { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; }
+.compare th, .compare td { padding: 18px 20px; text-align: left; border-bottom: 1px solid var(--border); }
+.compare th {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 15px;
+  background: var(--surface);
+  letter-spacing: -0.01em;
+}
+.compare th.us { background: var(--accent); color: #fff; }
+.compare td.us { background: rgba(255,60,0,0.05); font-weight: 500; }
+.compare .check { color: var(--accent); font-weight: 700; font-size: 16px; }
+.compare .x { color: var(--text-soft); }
+.compare .partial { color: var(--text-soft); font-size: 12px; }
+.compare tr:hover td { background: var(--surface); }
+.compare tr:hover td.us { background: rgba(255,60,0,0.1); }
+
+/* Use cases */
+.use-cases {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  border: 1px solid var(--border);
+}
+.uc {
+  padding: 32px 24px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.uc-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+.uc h4 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 19px;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.uc p { color: var(--text-soft); font-size: 13px; line-height: 1.55; }
+
+/* FAQ */
+.faq-list { max-width: 820px; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item summary {
+  padding: 28px 0;
+  cursor: pointer;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  display: flex; justify-content: space-between; align-items: center;
+  list-style: none;
+  gap: 24px;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: '+';
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 28px;
+  color: var(--accent);
+  transition: transform .25s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-item p { padding-bottom: 28px; color: var(--text-soft); font-size: 16px; line-height: 1.65; max-width: 720px; }
+.faq-item code { font-family: var(--mono); background: var(--surface); padding: 1px 6px; font-size: 13px; }
+
+/* CTA */
+.cta-block { background: var(--black); color: #fff; padding: 100px 0; text-align: center; }
+.cta-block h2 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(40px, 6vw, 72px);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 32px;
+  color: #fff;
+}
+.cta-block h2 .accent { color: var(--accent); }
+.cta-block .btn { background: var(--accent); border-color: var(--accent); }
+.cta-block .btn:hover { background: #fff; color: var(--text) !important; border-color: #fff; }
+
+/* Footer */
+footer { padding: 64px 0 40px; background: var(--bg); }
+footer .footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 56px;
+}
+footer h5 {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-soft);
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+footer ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+footer ul a { text-decoration: none; color: var(--text); font-size: 14px; transition: color .15s; }
+footer ul a:hover { color: var(--accent); }
+footer .brand-block p { color: var(--text-soft); font-size: 14px; margin-top: 14px; max-width: 280px; line-height: 1.55; }
+footer .legal {
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+  display: flex; justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-soft);
+  letter-spacing: 0.04em;
+  flex-wrap: wrap; gap: 12px;
+}
+@media(max-width:680px){ footer .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo-mark">⬡</div>
-  <div>
-    <h1>adfreeqr.com</h1>
-    <p>Free branded QR code generator — no sign-up, no watermarks, no ads</p>
+<nav>
+  <div class="inner">
+    <a href="/" class="brand" aria-label="adfreeqr.com home">
+      <span class="brand-mark"><span></span></span>
+      adfreeqr.com
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#compare">Compare</a>
+      <a href="#faq">FAQ</a>
+      <a href="/generate" class="btn">Open generator →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">v1.0 · MIT licensed · Open source</div>
+        <h1>
+          QR codes,<br>
+          <span class="strike">with ads.</span><br>
+          <span class="accent">Without.</span>
+        </h1>
+        <p class="lede">
+          Free, branded QR codes you actually own. No sign-up, no tracking, no watermarks, no "upgrade to pro" popups. Paste a URL, download a PNG.
+        </p>
+        <div class="hero-actions">
+          <a href="/generate" class="btn btn-lg btn-accent">Open generator</a>
+          <a href="#how" class="btn btn-lg btn-outline">How it works</a>
+        </div>
+        <div class="hero-meta">
+          <span>No ads</span>
+          <span>No sign-up</span>
+          <span>No watermark</span>
+          <span>Open source</span>
+        </div>
+      </div>
+      <aside class="qr-panel" aria-label="Scan to open generator on phone">
+        <span class="qr-panel-corner tl"></span>
+        <span class="qr-panel-corner tr"></span>
+        <span class="qr-panel-corner bl"></span>
+        <span class="qr-panel-corner br"></span>
+        <canvas id="hero-qr-canvas" width="400" height="400" aria-label="QR code linking to adfreeqr.com/generate"></canvas>
+        <div class="qr-panel-caption">SCAN TO OPEN ON PHONE → /generate</div>
+      </aside>
+    </div>
   </div>
 </header>
 
-<div class="mode-tabs">
-  <button class="tab-btn active" onclick="switchMode('single')">🔗 Single URL</button>
-  <button class="tab-btn" onclick="switchMode('multi')">📋 Multi-Link Page</button>
-</div>
-
-<div class="layout">
-  <div>
-    <!-- SINGLE MODE -->
-    <div class="card mode-panel active" id="panel-single">
-      <div class="card-title">URL</div>
-      <div class="field">
-        <label>Destination URL</label>
-        <input type="url" id="singleUrl" placeholder="https://yourwebsite.com" oninput="livePreviewSingle()">
-      </div>
-      <hr class="divider">
-      <div class="card-title">Appearance</div>
-      <div class="field">
-        <label>Logo in QR center (optional)</label>
-        <div class="logo-upload-area">
-          <input type="file" accept="image/*" onchange="handleLogoUpload(this,'single')">
-          <div id="singleLogoDefault" class="logo-upload-text"><strong>↑ Upload logo</strong>PNG, SVG, JPG — placed in QR center</div>
-          <div class="logo-preview-wrap" id="singleLogoPreviewWrap">
-            <img class="logo-preview-img" id="singleLogoPreviewImg" alt="logo">
-            <div><div style="font-size:13px;color:var(--text);font-weight:500" id="singleLogoName"></div><button class="remove-logo" onclick="clearLogo('single',event)">Remove</button></div>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <div class="row2">
-          <div>
-            <label>QR dot color</label>
-            <div class="color-row">
-              <input type="color" id="singleDotColor" value="#000000" oninput="syncColor('singleDotColor','singleDotHex');checkContrast()">
-              <input type="text" class="color-hex" id="singleDotHex" value="#000000" oninput="syncHex('singleDotHex','singleDotColor');checkContrast()" maxlength="7">
-            </div>
-          </div>
-          <div>
-            <label>Background</label>
-            <div class="color-row">
-              <input type="color" id="singleBgColor" value="#ffffff" oninput="syncColor('singleBgColor','singleBgHex');checkContrast()">
-              <input type="text" class="color-hex" id="singleBgHex" value="#ffffff" oninput="syncHex('singleBgHex','singleBgColor');checkContrast()" maxlength="7">
-            </div>
-          </div>
-        </div>
-        <div class="contrast-warn" id="contrastWarn">⚠️ Low contrast — QR may not scan. Use dark dots on a light background.</div>
-      </div>
-      <button class="btn-primary" onclick="generateQR('single')">⬡ Generate QR Code</button>
-      <button class="btn-secondary" id="dlSingleQrBtn" onclick="downloadQR()" disabled>↓ Download QR (PNG)</button>
-    </div>
-
-    <!-- MULTI MODE -->
-    <div class="card mode-panel" id="panel-multi">
-      <div class="card-title">Brand</div>
-      <div class="field row2">
-        <div><label>Brand / Page name</label><input type="text" id="brandName" placeholder="Your Brand" oninput="livePreviewMulti()"></div>
-        <div><label>Tagline</label><input type="text" id="brandTag" placeholder="Your tagline here" oninput="livePreviewMulti()"></div>
-      </div>
-      <div class="field">
-        <label>Logo (shown on link page &amp; optional QR center)</label>
-        <div class="logo-upload-area">
-          <input type="file" accept="image/*" onchange="handleLogoUpload(this,'multi')">
-          <div id="multiLogoDefault" class="logo-upload-text"><strong>↑ Upload logo</strong>PNG, SVG, JPG — appears on link page &amp; QR center</div>
-          <div class="logo-preview-wrap" id="multiLogoPreviewWrap">
-            <img class="logo-preview-img" id="multiLogoPreviewImg" alt="logo">
-            <div><div style="font-size:13px;color:var(--text);font-weight:500" id="multiLogoName"></div><button class="remove-logo" onclick="clearLogo('multi',event)">Remove</button></div>
-          </div>
-        </div>
-      </div>
-      <hr class="divider">
-      <div class="card-title">Links</div>
-      <div id="linksContainer"></div>
-      <button class="add-link-btn" onclick="addLinkRow()">+ Add link</button>
-      <hr class="divider">
-      <div class="card-title">Appearance</div>
-      <div class="field">
-        <div class="row2">
-          <div>
-            <label>Button color</label>
-            <div class="color-row">
-              <input type="color" id="multiAccent" value="#6c63ff" oninput="syncColor('multiAccent','multiAccentHex');livePreviewMulti()">
-              <input type="text" class="color-hex" id="multiAccentHex" value="#6c63ff" oninput="syncHex('multiAccentHex','multiAccent');livePreviewMulti()" maxlength="7">
-            </div>
-          </div>
-          <div>
-            <label>QR dot color</label>
-            <div class="color-row">
-              <input type="color" id="multiDotColor" value="#000000" oninput="syncColor('multiDotColor','multiDotHex')">
-              <input type="text" class="color-hex" id="multiDotHex" value="#000000" oninput="syncHex('multiDotHex','multiDotColor')" maxlength="7">
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr class="divider">
-      <div class="card-title">Hosting</div>
-
-      <div class="host-toggle">
-        <label class="host-opt active" id="hostOptFree">
-          <input type="radio" name="hostMode" value="free" checked onchange="updateHostingMode()">
-          <div>
-            <strong>Free hosting on adfreeqr.com</strong>
-            <span>Your link page lives forever at a unique adfreeqr.com URL — no setup needed</span>
-          </div>
-        </label>
-        <label class="host-opt" id="hostOptCustom">
-          <input type="radio" name="hostMode" value="custom" onchange="updateHostingMode()">
-          <div>
-            <strong>Use my own URL</strong>
-            <span>Download the link page HTML and host it yourself</span>
-          </div>
-        </label>
-      </div>
-
-      <!-- Free hosting info -->
-      <div id="freeHostInfo" class="info-box" style="margin-top:10px">
-        <strong style="color:var(--accent2)">✓ Ready to generate</strong><br>
-        <span style="font-size:11px">Your link page URL will appear below after clicking Generate</span>
-      </div>
-
-      <!-- Custom URL field -->
-      <div id="customHostBlock" style="display:none">
-        <div class="info-box" style="margin-bottom:10px">
-          <span class="step-num">1</span> Download link page &amp; host it on your server<br>
-          <span class="step-num">2</span> Paste the <strong>live URL</strong> below, then generate QR
-        </div>
-        <div class="field">
-          <label>Live URL of your hosted link page</label>
-          <input type="url" id="hostUrl" placeholder="https://yourdomain.com/links">
-        </div>
-      </div>
-
-      <!-- Generated URL display -->
-      <div id="generatedUrlBlock" style="display:none;margin-top:10px">
-        <label>Your hosted link page URL</label>
-        <div class="generated-url" id="generatedUrl"></div>
-        <button class="btn-secondary" onclick="copyGeneratedUrl()" style="margin-top:6px">📋 Copy URL</button>
-      </div>
-
-      <button class="btn-primary" onclick="generateQR('multi')">⬡ Generate QR Code</button>
-      <button class="btn-secondary" id="dlPageBtn" onclick="downloadPage()" disabled>↓ Download link page (HTML)</button>
-      <button class="btn-secondary" id="dlMultiQrBtn" onclick="downloadQR()" disabled>↓ Download QR (PNG)</button>
-    </div>
+<section class="stats-bar">
+  <div class="wrap inner">
+    <div class="stat-item"><span class="num">0</span><span class="label">Ads</span></div>
+    <div class="stat-item"><span class="num">0</span><span class="label">Trackers</span></div>
+    <div class="stat-item"><span class="num">0</span><span class="label">Sign-ups</span></div>
+    <div class="stat-item"><span class="num">0</span><span class="label">Watermarks</span></div>
+    <div class="stat-item"><span class="num">∞</span><span class="label">Free forever</span></div>
   </div>
+</section>
 
-  <!-- RIGHT PANEL -->
-  <div class="right-col">
-    <div class="card">
-      <div class="card-title">Preview</div>
-      <div class="phone-wrap">
-        <div class="phone">
-          <div id="previewSingle" class="single-url-preview">
-            <div style="font-size:11px;color:#888;margin-bottom:8px">QR will open →</div>
-            <div class="url-badge" id="previewUrl">https://yourwebsite.com</div>
-          </div>
-          <div id="previewMulti" style="display:none">
-            <div class="phone-head">
-              <img class="phone-logo-img" id="prevLogoImg" alt="">
-              <div class="phone-name" id="prevName">Your Brand</div>
-              <div class="phone-tagline" id="prevTag">Your tagline here</div>
-            </div>
-            <div class="phone-links" id="prevLinks"></div>
-          </div>
+<section class="block" id="features">
+  <div class="wrap">
+    <div class="eyebrow">What you get</div>
+    <h2>Every feature the paid ones charge for. None of the bullshit.</h2>
+    <p class="section-lede">A real QR generator, not a freemium trap. Use it forever, hand it to a colleague, embed it in a poster — there's nothing to "unlock."</p>
+
+    <div class="features">
+      <div class="feat big">
+        <div>
+          <div class="feat-icon orange"></div>
+          <h3>Branded with your logo</h3>
+          <p>Drop any PNG, SVG, or JPG in the middle. High error-correction means the code still scans even with a logo covering 20% of it.</p>
         </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-title" style="text-align:center">QR Code</div>
-      <div class="qr-section">
-        <canvas id="qr-canvas" width="260" height="260"></canvas>
-        <p class="qr-hint" id="qrHint">Fill in the details and click Generate.</p>
+      <div class="feat small">
+        <div>
+          <div class="feat-icon"></div>
+          <h3>Single URL</h3>
+          <p>Paste a link, get a styled QR. Done.</p>
+        </div>
+      </div>
+      <div class="feat medium">
+        <div>
+          <div class="feat-icon"></div>
+          <h3>Multi-link pages</h3>
+          <p>Build a Linktree-style page with multiple URLs. Hosted free on adfreeqr.com or download the HTML.</p>
+        </div>
+      </div>
+      <div class="feat medium">
+        <div>
+          <div class="feat-icon orange"></div>
+          <h3>Print-ready PNG</h3>
+          <p>520×520 PNG ready for offset printing. No watermark, no "Made with…" stamp.</p>
+        </div>
+      </div>
+      <div class="feat small">
+        <div>
+          <div class="feat-icon"></div>
+          <h3>Custom colors</h3>
+          <p>Match your brand. Contrast warnings keep it scannable.</p>
+        </div>
+      </div>
+      <div class="feat big">
+        <div>
+          <div class="feat-icon"></div>
+          <h3>Privacy by default</h3>
+          <p>QR generation happens in your browser. Your URLs and logos never touch our servers. The entire site is one HTML file you can audit on GitHub.</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<footer><p>adfreeqr.com — Free, open source, no sign-up required. <a href="https://github.com/dipudevarajan/qr-generator">GitHub</a></p></footer>
+<section class="block" id="how">
+  <div class="wrap">
+    <div class="eyebrow">Three steps</div>
+    <h2>From URL to printable QR in under a minute.</h2>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01 / PASTE</span>
+        <h3>Paste your link</h3>
+        <p>Single URL (your site, a product page, a vCard) or build a multi-link page with your name, tagline, and several URLs.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02 / BRAND</span>
+        <h3>Brand it</h3>
+        <p>Upload a logo, pick QR dot and background colors. Live preview updates as you type. Contrast warning catches bad combos.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03 / DOWNLOAD</span>
+        <h3>Download</h3>
+        <p>Hit generate, download the PNG. Test scan it. Done. Print it on a menu, a flyer, a business card, a t-shirt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="compare">
+  <div class="wrap">
+    <div class="eyebrow">Honest comparison</div>
+    <h2>How we stack up against the "free" ones.</h2>
+    <p class="section-lede">Most free QR generators are trial-ware in disguise. Here's what each actually gives you without paying.</p>
+
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="us">adfreeqr.com</th>
+            <th>QR Tiger</th>
+            <th>QR Code Generator</th>
+            <th>Linktree</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Free forever</td><td class="us"><span class="check">✓</span></td><td><span class="partial">14-day trial</span></td><td><span class="partial">Basic only</span></td><td><span class="partial">Limited tier</span></td></tr>
+          <tr><td>No ads on the site</td><td class="us"><span class="check">✓</span></td><td><span class="x">×</span></td><td><span class="x">×</span></td><td><span class="x">×</span></td></tr>
+          <tr><td>No sign-up required</td><td class="us"><span class="check">✓</span></td><td><span class="x">×</span></td><td><span class="x">×</span></td><td><span class="x">×</span></td></tr>
+          <tr><td>Custom logo in QR</td><td class="us"><span class="check">✓</span></td><td><span class="partial">Paid only</span></td><td><span class="partial">Paid only</span></td><td>n/a</td></tr>
+          <tr><td>Multi-link page</td><td class="us"><span class="check">✓ free</span></td><td><span class="x">×</span></td><td><span class="x">×</span></td><td><span class="partial">Paid removes branding</span></td></tr>
+          <tr><td>No watermark</td><td class="us"><span class="check">✓</span></td><td><span class="partial">Paid only</span></td><td><span class="partial">Paid only</span></td><td>n/a</td></tr>
+          <tr><td>Open source</td><td class="us"><span class="check">✓ MIT</span></td><td><span class="x">×</span></td><td><span class="x">×</span></td><td><span class="x">×</span></td></tr>
+          <tr><td>QR codes that never expire</td><td class="us"><span class="check">✓</span></td><td><span class="partial">Dynamic = paid</span></td><td><span class="partial">Dynamic = paid</span></td><td>n/a</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size:13px;color:var(--text-soft);margin-top:24px;max-width:700px">
+      Comparison based on each provider's free tier as of June 2026. We're an open-source side project — if anything is inaccurate, <a href="https://github.com/dipudevarajan/qr-generator/issues" style="color:var(--accent);text-decoration:underline">file an issue</a> and we'll fix it.
+    </p>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="eyebrow">Where it goes</div>
+    <h2>QR codes that end up on real things.</h2>
+    <p class="section-lede">Restaurants, weddings, business cards, posters, packaging, equipment tags, museum exhibits — anywhere physical meets digital.</p>
+
+    <div class="use-cases">
+      <div class="uc"><div class="uc-tag">Restaurants</div><h4>Digital menus</h4><p>One QR on each table that opens your menu. Update prices without reprinting.</p></div>
+      <div class="uc"><div class="uc-tag">Cards</div><h4>Business cards</h4><p>Multi-link page with email, phone, LinkedIn, portfolio. One QR replaces a stack of contacts.</p></div>
+      <div class="uc"><div class="uc-tag">Events</div><h4>Weddings &amp; parties</h4><p>QR on save-the-dates linking to RSVP, registry, dress code, and venue map.</p></div>
+      <div class="uc"><div class="uc-tag">Print</div><h4>Flyers &amp; posters</h4><p>High-res 520px PNG ready for offset printing. No watermark in the corner.</p></div>
+      <div class="uc"><div class="uc-tag">Products</div><h4>Packaging</h4><p>Link to manuals, registration, support — no need to print a URL nobody types.</p></div>
+      <div class="uc"><div class="uc-tag">Field</div><h4>Equipment tags</h4><p>Each asset gets a QR linking to its docs, history, or report-a-problem form.</p></div>
+      <div class="uc"><div class="uc-tag">Spaces</div><h4>Museum &amp; exhibits</h4><p>Self-guided tours that update without replacing signage.</p></div>
+      <div class="uc"><div class="uc-tag">Personal</div><h4>Portfolio links</h4><p>Artists, freelancers, students: one QR to a curated multi-link page.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="faq">
+  <div class="wrap">
+    <div class="eyebrow">Common questions</div>
+    <h2>Answers to the things people actually ask.</h2>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Is adfreeqr.com really free?</summary>
+        <p>Yes. No sign-up, no credit card, no upgrade prompts, no watermarks. The source code is on GitHub under the MIT license — you can run your own copy on your own server if you'd rather. We don't even ask for your email.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Do my QR codes expire?</summary>
+        <p>No. The QR code you download encodes your URL directly — it works forever, even if our site disappears tomorrow. Compare that to "dynamic QR codes" from paid services: those route through their server, so when they shut down or your subscription lapses, every printed code becomes useless.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I add my logo to the QR code?</summary>
+        <p>Yes. Upload any PNG, SVG, or JPG — we place it in the centre of the QR with a white halo for visibility. Error correction is set to level H, which lets the QR survive up to 30% obstruction, so the code still scans reliably with a logo covering the middle.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What is a multi-link page and how does it work?</summary>
+        <p>A small landing page with several links — your name, a logo, and a list of URLs (Instagram, website, WhatsApp, etc.). Build it in the generator, then either let us host it free at <code>adfreeqr.com/p/...</code> (the link data is encoded in the URL itself — no database, never expires) or download the HTML and host it yourself.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Do you track me?</summary>
+        <p>We count anonymous events: <em>which type</em> of QR was generated and the visiting country (from a Cloudflare HTTP header). We <strong>never</strong> store raw IP addresses, never set cookies, never use a third-party analytics provider. Generation itself happens in your browser — your URLs and logos are never sent to our servers.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Is the QR generated on my device or your server?</summary>
+        <p>Entirely on your device. The whole page is one HTML file and runs in your browser using JavaScript. Open it once, then disconnect from the internet — the generator still works. You can verify this in the browser dev tools network tab.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I use these QR codes commercially?</summary>
+        <p>Yes. QR codes you generate are yours — print them on products, packaging, ads, books, t-shirts. There's no licence, no attribution requirement, no restriction.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta-block">
+  <div class="wrap">
+    <h2>One link. <span class="accent">One QR.</span><br>Sixty seconds.</h2>
+    <a href="/generate" class="btn btn-lg">Open the generator →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="brand-block">
+        <a href="/" class="brand">
+          <span class="brand-mark"><span></span></span>
+          adfreeqr.com
+        </a>
+        <p>Free, open-source QR code generator. Built as a side project, run with no ads, kept free forever.</p>
+      </div>
+      <div>
+        <h5>Tool</h5>
+        <ul>
+          <li><a href="/generate">QR Generator</a></li>
+          <li><a href="/generate">Multi-link page</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Learn</h5>
+        <ul>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="/vs/linktree/">vs Linktree</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Source</h5>
+        <ul>
+          <li><a href="https://github.com/dipudevarajan/qr-generator" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/dipudevarajan/qr-generator/issues" rel="noopener">Report an issue</a></li>
+          <li><a href="https://github.com/dipudevarajan/qr-generator/blob/main/LICENSE" rel="noopener">MIT license</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 adfreeqr.com · Built by humans, for humans</span>
+      <span>v1.0</span>
+    </div>
+  </div>
+</footer>
 
 <script>
-// ── State ──────────────────────────────────────────────────────────
-let currentMode = 'single';
-let logoData = { single: null, multi: null };
-let logoImg  = { single: null, multi: null };
-let currentHTML = '';
-let currentMatrix = null;
-let currentDot = '#000000';
-let currentBg  = '#ffffff';
-
-// ── Mode Switch ────────────────────────────────────────────────────
-function switchMode(mode) {
-  currentMode = mode;
-  document.querySelectorAll('.tab-btn').forEach((b,i) =>
-    b.classList.toggle('active', i === (mode==='single'?0:1)));
-  document.getElementById('panel-single').classList.toggle('active', mode==='single');
-  document.getElementById('panel-multi').classList.toggle('active', mode==='multi');
-  document.getElementById('previewSingle').style.display = mode==='single'?'block':'none';
-  document.getElementById('previewMulti').style.display  = mode==='multi' ?'block':'none';
-  resetCanvas();
-}
-
-// ── Color helpers ──────────────────────────────────────────────────
-function syncColor(cId, hId) { document.getElementById(hId).value = document.getElementById(cId).value; }
-function syncHex(hId, cId) {
-  const v = document.getElementById(hId).value;
-  if (/^#[0-9a-fA-F]{6}$/.test(v)) document.getElementById(cId).value = v;
-}
-
-// Relative luminance per WCAG
-function luminance(hex) {
-  const r = parseInt(hex.slice(1,3),16)/255;
-  const g = parseInt(hex.slice(3,5),16)/255;
-  const b = parseInt(hex.slice(5,7),16)/255;
-  const c = x => x <= 0.03928 ? x/12.92 : Math.pow((x+0.055)/1.055, 2.4);
-  return 0.2126*c(r) + 0.7152*c(g) + 0.0722*c(b);
-}
-function contrastRatio(h1, h2) {
-  const l1 = luminance(h1), l2 = luminance(h2);
-  return (Math.max(l1,l2)+0.05)/(Math.min(l1,l2)+0.05);
-}
-function checkContrast() {
-  const dot = document.getElementById('singleDotColor').value;
-  const bg  = document.getElementById('singleBgColor').value;
-  const ratio = contrastRatio(dot, bg);
-  document.getElementById('contrastWarn').classList.toggle('show', ratio < 3);
-}
-
-// ── Logo ───────────────────────────────────────────────────────────
-function handleLogoUpload(input, mode) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    logoData[mode] = e.target.result;
-    const img = new Image();
-    img.onload = () => { logoImg[mode] = img; if (mode==='multi') livePreviewMulti(); };
-    img.src = e.target.result;
-    document.getElementById(`${mode}LogoDefault`).style.display = 'none';
-    document.getElementById(`${mode}LogoPreviewWrap`).classList.add('show');
-    document.getElementById(`${mode}LogoPreviewImg`).src = e.target.result;
-    document.getElementById(`${mode}LogoName`).textContent = file.name;
-    if (mode==='multi') { const p=document.getElementById('prevLogoImg'); p.src=e.target.result; p.style.display='block'; }
-  };
-  reader.readAsDataURL(file);
-}
-function clearLogo(mode, e) {
-  e.stopPropagation();
-  logoData[mode]=null; logoImg[mode]=null;
-  document.getElementById(`${mode}LogoDefault`).style.display='block';
-  document.getElementById(`${mode}LogoPreviewWrap`).classList.remove('show');
-  if (mode==='multi') document.getElementById('prevLogoImg').style.display='none';
-}
-
-// ── Previews ───────────────────────────────────────────────────────
-function livePreviewSingle() {
-  const url = document.getElementById('singleUrl').value.trim()||'https://yourwebsite.com';
-  document.getElementById('previewUrl').textContent = url.length>36?url.slice(0,33)+'…':url;
-}
-let linkIdCount = 0;
-function addLinkRow(label='', url='') {
-  const id = linkIdCount++;
-  const row = document.createElement('div');
-  row.className='link-row'; row.id=`lr-${id}`;
-  row.innerHTML=`<input type="text" placeholder="Label" value="${esc(label)}" oninput="livePreviewMulti()">
-    <input type="url" placeholder="https://..." value="${esc(url)}" oninput="livePreviewMulti()">
-    <button class="del-btn" onclick="document.getElementById('lr-${id}').remove();livePreviewMulti()">×</button>`;
-  document.getElementById('linksContainer').appendChild(row);
-  livePreviewMulti();
-}
-function getLinks() {
-  return [...document.querySelectorAll('#linksContainer .link-row')].map(r=>{
-    const i=r.querySelectorAll('input');
-    return {label:i[0].value.trim(),url:i[1].value.trim()};
-  }).filter(l=>l.label||l.url);
-}
-function esc(s){return s.replace(/"/g,'&quot;').replace(/</g,'&lt;')}
-function livePreviewMulti() {
-  document.getElementById('prevName').textContent=document.getElementById('brandName').value||'Your Brand';
-  document.getElementById('prevTag').textContent=document.getElementById('brandTag').value||'Your tagline here';
-  const accent=document.getElementById('multiAccent').value;
-  const c=document.getElementById('prevLinks'); c.innerHTML='';
-  getLinks().forEach(l=>{
-    const a=document.createElement('a'); a.className='phone-link-item';
-    a.textContent=l.label||l.url; a.href='#';
-    a.style.borderColor=accent+'60'; a.style.color=accent;
-    c.appendChild(a);
-  });
-}
-
-// ── QR Generation — using qrcode-generator for reliable matrix ─────
-function getQRMatrix(text) {
-  // qrcode-generator exposes qrcode() globally
-  const qr = qrcode(0, 'H'); // type 0 = auto, H = high error correction
-  qr.addData(text);
-  qr.make();
-  const count = qr.getModuleCount();
-  const matrix = [];
-  for (let r = 0; r < count; r++) {
-    matrix[r] = [];
-    for (let c = 0; c < count; c++) {
-      matrix[r][c] = qr.isDark(r, c);
-    }
-  }
-  return matrix;
-}
-
-function generateQR(mode) {
-  let url;
-  if (mode === 'single') {
-    url = document.getElementById('singleUrl').value.trim();
-    if (!url) { alert('Please enter a URL.'); return; }
-    currentDot = document.getElementById('singleDotColor').value;
-    currentBg  = document.getElementById('singleBgColor').value;
-  } else {
-    currentHTML = buildPageHTML();
-    document.getElementById('dlPageBtn').disabled = false;
-
-    const hostMode = document.querySelector('input[name=hostMode]:checked').value;
-
-    if (hostMode === 'free') {
-      // Encode link data into URL hash on adfreeqr.com/p/
-      const data = buildLinkPageData();
-      if (!data.l || data.l.length === 0) {
-        alert('Please add at least one link first.');
-        return;
-      }
-      const json = JSON.stringify(data);
-      const compressed = LZString.compressToEncodedURIComponent(json);
-      url = location.origin + '/p/#d=' + compressed;
-
-      // Show the generated URL to the user
-      const block = document.getElementById('generatedUrlBlock');
-      const display = document.getElementById('generatedUrl');
-      display.textContent = url;
-      block.style.display = 'block';
-
-      // Warn if URL is too long for reliable QR scanning
-      if (url.length > 1800) {
-        alert('Heads up: your link page is large (' + url.length + ' chars) — the QR code will be very dense and harder to scan. Consider using a URL-based logo instead of uploaded image, or fewer links.');
-      }
-    } else {
-      // Custom URL mode
-      url = document.getElementById('hostUrl').value.trim();
-      if (!url) { alert('Please paste your hosted link page URL first.'); return; }
-      document.getElementById('generatedUrlBlock').style.display = 'none';
-    }
-
-    currentDot = document.getElementById('multiDotColor').value;
-    currentBg  = '#ffffff';
-  }
-
+window.addEventListener('load', function() {
+  if (typeof qrcode === 'undefined') return;
   try {
-    currentMatrix = getQRMatrix(url);
-    renderQR(currentMatrix, logoImg[mode], currentDot, currentBg);
-    trackGeneration(mode); // fire and forget analytics
-  } catch(e) {
-    alert('Could not generate QR. URL may be too long — try simplifying your link page or use custom hosting.');
-    console.error(e);
-  }
-}
+    const qr = qrcode(0, 'H');
+    qr.addData('https://adfreeqr.com/generate');
+    qr.make();
+    const count = qr.getModuleCount();
+    const canvas = document.getElementById('hero-qr-canvas');
+    const ctx = canvas.getContext('2d');
+    const SIZE = 400;
+    canvas.width = canvas.height = SIZE;
+    const QUIET = 2;
+    const totalMods = count + QUIET * 2;
+    const cell = SIZE / totalMods;
 
-function updateHostingMode() {
-  const mode = document.querySelector('input[name=hostMode]:checked').value;
-  document.getElementById('hostOptFree').classList.toggle('active', mode === 'free');
-  document.getElementById('hostOptCustom').classList.toggle('active', mode === 'custom');
-  document.getElementById('freeHostInfo').style.display = mode === 'free' ? 'block' : 'none';
-  document.getElementById('customHostBlock').style.display = mode === 'custom' ? 'block' : 'none';
-  document.getElementById('generatedUrlBlock').style.display = 'none';
-}
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, SIZE, SIZE);
 
-function copyGeneratedUrl() {
-  const url = document.getElementById('generatedUrl').textContent;
-  navigator.clipboard.writeText(url).then(() => {
-    const btn = event.target;
-    const original = btn.textContent;
-    btn.textContent = '✓ Copied!';
-    setTimeout(() => btn.textContent = original, 1500);
-  });
-}
-
-// Build compact data object for URL encoding (short keys to save space)
-function buildLinkPageData() {
-  const data = {
-    n: document.getElementById('brandName').value || 'My Brand',
-    t: document.getElementById('brandTag').value || '',
-    a: document.getElementById('multiAccent').value,
-    l: getLinks().map(x => ({ b: x.label, u: x.url }))
-  };
-  // Only include logo if user uploaded one — keep URL short by warning about size
-  if (logoData.multi) {
-    data.i = logoData.multi;
-  }
-  return data;
-}
-
-// Fire-and-forget tracking
-function trackGeneration(mode) {
-  try {
-    fetch('/api/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: mode })
-    }).catch(() => {}); // silent fail — analytics never breaks UX
-  } catch(e) {}
-}
-
-// ── Render ─────────────────────────────────────────────────────────
-function renderQR(matrix, logo, dotColor, bgColor) {
-  const canvas = document.getElementById('qr-canvas');
-  const SIZE = 540;
-  const QUIET = 4; // quiet zone in modules
-  canvas.width = canvas.height = SIZE;
-  const ctx = canvas.getContext('2d');
-  const mods = matrix.length;
-  const totalMods = mods + QUIET * 2;
-  const cell = SIZE / totalMods;
-
-  // Background
-  ctx.fillStyle = bgColor;
-  ctx.beginPath();
-  roundRect(ctx, 0, 0, SIZE, SIZE, 16);
-  ctx.fill();
-
-  function isFinderRegion(r, c) {
-    // top-left, top-right, bottom-left finder patterns (7x7 + 1 separator)
-    return (r < 8 && c < 8) || (r < 8 && c >= mods-8) || (r >= mods-8 && c < 8);
-  }
-
-  // ── Data dots (rounded squares) ──
-  ctx.fillStyle = dotColor;
-  for (let r = 0; r < mods; r++) {
-    for (let c = 0; c < mods; c++) {
-      if (!matrix[r][c] || isFinderRegion(r, c)) continue;
-      const x = (c + QUIET) * cell;
-      const y = (r + QUIET) * cell;
-      const s = cell * 0.85;
-      const o = (cell - s) / 2;
-      ctx.beginPath();
-      roundRect(ctx, x + o, y + o, s, s, s * 0.3);
-      ctx.fill();
+    function isFinder(r, c) {
+      return (r < 8 && c < 8) || (r < 8 && c >= count-8) || (r >= count-8 && c < 8);
     }
-  }
 
-  // ── Finder patterns — custom styled ──
-  function drawFinder(row, col) {
-    const x = (col + QUIET) * cell;
-    const y = (row + QUIET) * cell;
-    const sz = 7 * cell;
-    const r = sz * 0.15;
+    ctx.fillStyle = '#0A0A0A';
+    for (let r = 0; r < count; r++) {
+      for (let c = 0; c < count; c++) {
+        if (!qr.isDark(r, c) || isFinder(r, c)) continue;
+        const x = (c + QUIET) * cell;
+        const y = (r + QUIET) * cell;
+        const s = cell * 0.82;
+        const o = (cell - s) / 2;
+        const r2 = s * 0.32;
+        ctx.beginPath();
+        ctx.moveTo(x+o+r2, y+o);
+        ctx.lineTo(x+o+s-r2, y+o);
+        ctx.quadraticCurveTo(x+o+s, y+o, x+o+s, y+o+r2);
+        ctx.lineTo(x+o+s, y+o+s-r2);
+        ctx.quadraticCurveTo(x+o+s, y+o+s, x+o+s-r2, y+o+s);
+        ctx.lineTo(x+o+r2, y+o+s);
+        ctx.quadraticCurveTo(x+o, y+o+s, x+o, y+o+s-r2);
+        ctx.lineTo(x+o, y+o+r2);
+        ctx.quadraticCurveTo(x+o, y+o, x+o+r2, y+o);
+        ctx.fill();
+      }
+    }
 
-    // Outer filled square
-    ctx.fillStyle = dotColor;
-    ctx.beginPath(); roundRect(ctx, x, y, sz, sz, r); ctx.fill();
-
-    // White ring
-    const gap = cell;
-    ctx.fillStyle = bgColor;
-    ctx.beginPath(); roundRect(ctx, x+gap, y+gap, sz-gap*2, sz-gap*2, r*0.5); ctx.fill();
-
-    // Inner filled square
-    const inner = cell * 3;
-    const io = (sz - inner) / 2;
-    ctx.fillStyle = dotColor;
-    ctx.beginPath(); roundRect(ctx, x+io, y+io, inner, inner, r*0.3); ctx.fill();
-  }
-
-  drawFinder(0, 0);
-  drawFinder(0, mods - 7);
-  drawFinder(mods - 7, 0);
-
-  // ── Logo in center ──
-  if (logo && logo.complete && logo.naturalWidth > 0) {
-    const logoSz = SIZE * 0.16;
-    const pad    = logoSz * 0.3;
-    const bgSz   = logoSz + pad * 2;
-    const cx = SIZE / 2;
-    const cy = SIZE / 2;
-
-    // White circle behind logo
-    ctx.fillStyle = bgColor;
-    ctx.beginPath();
-    ctx.arc(cx, cy, bgSz/2, 0, Math.PI*2);
-    ctx.fill();
-
-    // Clip logo to circle
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, logoSz/2, 0, Math.PI*2);
-    ctx.clip();
-    ctx.drawImage(logo, cx-logoSz/2, cy-logoSz/2, logoSz, logoSz);
-    ctx.restore();
-  }
-
-  document.getElementById('qrHint').textContent = '✓ Done! Scan to test before downloading.';
-  document.getElementById('dlSingleQrBtn').disabled = false;
-  document.getElementById('dlMultiQrBtn').disabled = false;
-}
-
-function roundRect(ctx, x, y, w, h, r) {
-  r = Math.min(r, w/2, h/2);
-  ctx.moveTo(x+r, y);
-  ctx.lineTo(x+w-r, y);
-  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r);
-  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-  ctx.lineTo(x+r,y+h);
-  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r);
-  ctx.quadraticCurveTo(x,y,x+r,y);
-  ctx.closePath();
-}
-
-function resetCanvas() {
-  const canvas = document.getElementById('qr-canvas');
-  canvas.width = canvas.height = 260;
-  canvas.getContext('2d').clearRect(0,0,260,260);
-  document.getElementById('qrHint').textContent = 'Fill in the details and click Generate.';
-  document.getElementById('dlSingleQrBtn').disabled = true;
-  document.getElementById('dlMultiQrBtn').disabled = true;
-}
-
-// ── Downloads ──────────────────────────────────────────────────────
-function downloadQR() {
-  const a = document.createElement('a');
-  a.href = document.getElementById('qr-canvas').toDataURL('image/png');
-  a.download = 'qrcraft-code.png';
-  a.click();
-}
-function downloadPage() {
-  if (!currentHTML) currentHTML = buildPageHTML();
-  const a = document.createElement('a');
-  a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(currentHTML);
-  a.download = 'links.html';
-  a.click();
-}
-
-// ── Link Page Builder ──────────────────────────────────────────────
-function buildPageHTML() {
-  const name   = document.getElementById('brandName').value || 'My Brand';
-  const tag    = document.getElementById('brandTag').value  || '';
-  const links  = getLinks();
-  const accent = document.getElementById('multiAccent').value;
-  const logo   = logoData.multi ? `<img src="${logoData.multi}" class="brand-logo" alt="${name}">` : '';
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${name}${tag?' — '+tag:''}</title>
-<meta name="description" content="${tag||name}">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f6fb;padding:2rem 1rem}
-.card{background:#fff;border-radius:22px;padding:2.25rem 1.75rem;max-width:400px;width:100%;text-align:center;box-shadow:0 4px 32px rgba(0,0,0,.1)}
-.brand-logo{width:76px;height:76px;border-radius:18px;object-fit:contain;margin:0 auto 1rem;display:block;border:1px solid #eee}
-h1{font-size:22px;font-weight:700;color:#111;margin-bottom:4px}
-.tag{font-size:14px;color:#888;margin-bottom:2rem}
-.links{display:flex;flex-direction:column;gap:10px}
-a.link-btn{display:flex;align-items:center;justify-content:center;padding:14px 18px;border-radius:12px;border:2px solid ${accent}33;color:#111;font-size:15px;font-weight:600;text-decoration:none;background:#fafafa;transition:all .18s}
-a.link-btn:hover{background:${accent}15;border-color:${accent};transform:translateY(-1px)}
-.footer{margin-top:2rem;font-size:11px;color:#bbb}
-</style>
-</head>
-<body>
-<div class="card">
-  ${logo}
-  <h1>${name}</h1>
-  ${tag?`<p class="tag">${tag}</p>`:''}
-  <div class="links">
-    ${links.map(l=>`<a class="link-btn" href="${l.url}" target="_blank" rel="noopener">${l.label||l.url}</a>`).join('\n    ')}
-  </div>
-  <p class="footer">© ${new Date().getFullYear()} ${name}</p>
-</div>
-</body>
-</html>`;
-}
-
-// ── Init ───────────────────────────────────────────────────────────
-addLinkRow('Website','');
-addLinkRow('Instagram','');
-addLinkRow('WhatsApp','');
-livePreviewSingle();
-livePreviewMulti();
-resetCanvas();
+    function drawFinder(row, col) {
+      const x = (col + QUIET) * cell;
+      const y = (row + QUIET) * cell;
+      const sz = 7 * cell;
+      ctx.fillStyle = '#FF3C00';
+      ctx.fillRect(x, y, sz, sz);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(x + cell, y + cell, sz - 2*cell, sz - 2*cell);
+      ctx.fillStyle = '#0A0A0A';
+      ctx.fillRect(x + 2*cell, y + 2*cell, sz - 4*cell, sz - 4*cell);
+    }
+    drawFinder(0, 0);
+    drawFinder(0, count - 7);
+    drawFinder(count - 7, 0);
+  } catch(e) { console.error(e); }
+});
 </script>
 </body>
 </html>
