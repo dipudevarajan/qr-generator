@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard — adfreeqr.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f14;--surface:#151820;--surface2:#1c2030;
+  --border:#252a3a;--accent:#6c63ff;--accent2:#a78bfa;
+  --text:#e8eaf2;--muted:#7880a0;--success:#34d399;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem}
+header{max-width:1100px;margin:0 auto 2rem;display:flex;align-items:center;gap:1rem}
+.logo-mark{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+header h1{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700}
+header p{font-size:13px;color:var(--muted);margin-top:2px}
+.refresh-btn{margin-left:auto;padding:8px 14px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;transition:all .15s}
+.refresh-btn:hover{border-color:var(--accent);color:var(--text)}
+
+.container{max-width:1100px;margin:0 auto;display:grid;gap:1.25rem}
+.grid{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem}
+.card-title{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem}
+
+.stat-big{font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;color:var(--text);line-height:1}
+.stat-label{font-size:12px;color:var(--muted);margin-top:6px}
+.stat-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.stat-row:last-child{border-bottom:none}
+.stat-row .key{font-size:13px;color:var(--text)}
+.stat-row .val{font-size:13px;font-weight:600;color:var(--accent2);font-family:monospace}
+
+.bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-top:6px}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px}
+
+.empty{padding:1rem;text-align:center;color:var(--muted);font-size:13px}
+.error{padding:1rem;text-align:center;color:#f87171;font-size:13px;background:#7f1d1d22;border-radius:8px}
+
+.country-flag{display:inline-block;width:22px;text-align:center;font-size:14px}
+footer{max-width:1100px;margin:3rem auto 0;text-align:center;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">⬡</div>
+  <div>
+    <h1>Admin Dashboard</h1>
+    <p>QR generation analytics</p>
+  </div>
+  <button class="refresh-btn" onclick="loadStats()">↻ Refresh</button>
+</header>
+
+<div class="container">
+
+  <!-- Top stats -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">Total QRs Generated</div>
+      <div class="stat-big" id="totalCount">—</div>
+      <div class="stat-label">All time</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Today</div>
+      <div class="stat-big" id="todayCount">—</div>
+      <div class="stat-label">Since midnight UTC</div>
+    </div>
+    <div class="card">
+      <div class="card-title">This Week</div>
+      <div class="stat-big" id="weekCount">—</div>
+      <div class="stat-label">Last 7 days</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Unique Visitors</div>
+      <div class="stat-big" id="uniqueCount">—</div>
+      <div class="stat-label">By IP, all time</div>
+    </div>
+  </div>
+
+  <!-- Breakdowns -->
+  <div class="grid" style="grid-template-columns:1fr 1fr">
+
+    <div class="card">
+      <div class="card-title">By Type</div>
+      <div id="typeBreakdown"><div class="empty">Loading…</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Top Countries</div>
+      <div id="countryBreakdown"><div class="empty">Loading…</div></div>
+    </div>
+
+  </div>
+
+  <!-- Daily chart -->
+  <div class="card">
+    <div class="card-title">Last 14 Days</div>
+    <div id="dailyChart"><div class="empty">Loading…</div></div>
+  </div>
+
+</div>
+
+<footer>
+  Protected admin area · <a href="/" style="color:var(--accent2)">Back to site</a>
+</footer>
+
+<script>
+const FLAGS = {
+  IN:'🇮🇳',US:'🇺🇸',GB:'🇬🇧',CA:'🇨🇦',AU:'🇦🇺',DE:'🇩🇪',FR:'🇫🇷',JP:'🇯🇵',
+  CN:'🇨🇳',BR:'🇧🇷',MX:'🇲🇽',IT:'🇮🇹',ES:'🇪🇸',NL:'🇳🇱',RU:'🇷🇺',ID:'🇮🇩',
+  PH:'🇵🇭',VN:'🇻🇳',TH:'🇹🇭',TR:'🇹🇷',ZA:'🇿🇦',AE:'🇦🇪',SG:'🇸🇬',KR:'🇰🇷',
+  SE:'🇸🇪',PL:'🇵🇱',NO:'🇳🇴',FI:'🇫🇮',CH:'🇨🇭',BE:'🇧🇪',AT:'🇦🇹',IE:'🇮🇪',
+  NZ:'🇳🇿',PT:'🇵🇹',GR:'🇬🇷',IL:'🇮🇱',AR:'🇦🇷',CL:'🇨🇱',CO:'🇨🇴',PE:'🇵🇪',
+  EG:'🇪🇬',SA:'🇸🇦',PK:'🇵🇰',BD:'🇧🇩',NG:'🇳🇬',KE:'🇰🇪',MY:'🇲🇾',HK:'🇭🇰',TW:'🇹🇼'
+};
+
+async function loadStats() {
+  try {
+    const res = await fetch('/api/stats');
+    if (!res.ok) throw new Error('Failed: ' + res.status);
+    const d = await res.json();
+
+    document.getElementById('totalCount').textContent  = (d.total || 0).toLocaleString();
+    document.getElementById('todayCount').textContent  = (d.today || 0).toLocaleString();
+    document.getElementById('weekCount').textContent   = (d.week  || 0).toLocaleString();
+    document.getElementById('uniqueCount').textContent = (d.unique|| 0).toLocaleString();
+
+    // Type breakdown
+    const types = d.byType || {};
+    const totalType = (types.single || 0) + (types.multi || 0);
+    document.getElementById('typeBreakdown').innerHTML = totalType === 0
+      ? '<div class="empty">No data yet</div>'
+      : `
+        <div class="stat-row">
+          <span class="key">🔗 Single URL</span>
+          <span class="val">${(types.single||0).toLocaleString()}</span>
+        </div>
+        <div class="bar"><div class="bar-fill" style="width:${((types.single||0)/totalType*100).toFixed(1)}%"></div></div>
+        <div style="height:12px"></div>
+        <div class="stat-row">
+          <span class="key">📋 Multi-Link Page</span>
+          <span class="val">${(types.multi||0).toLocaleString()}</span>
+        </div>
+        <div class="bar"><div class="bar-fill" style="width:${((types.multi||0)/totalType*100).toFixed(1)}%"></div></div>
+      `;
+
+    // Countries
+    const countries = d.byCountry || [];
+    document.getElementById('countryBreakdown').innerHTML = countries.length === 0
+      ? '<div class="empty">No data yet</div>'
+      : countries.slice(0,10).map(c => `
+        <div class="stat-row">
+          <span class="key"><span class="country-flag">${FLAGS[c.code]||'🌐'}</span> ${c.code || 'Unknown'}</span>
+          <span class="val">${c.count.toLocaleString()}</span>
+        </div>
+      `).join('');
+
+    // Daily chart
+    const daily = d.daily || [];
+    const max = Math.max(1, ...daily.map(x => x.count));
+    document.getElementById('dailyChart').innerHTML = daily.length === 0
+      ? '<div class="empty">No data yet</div>'
+      : `<div style="display:flex;align-items:flex-end;gap:6px;height:140px;padding:1rem 0">
+          ${daily.map(d => `
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px" title="${d.date}: ${d.count}">
+              <div style="font-size:10px;color:var(--muted)">${d.count}</div>
+              <div style="width:100%;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:4px 4px 0 0;height:${(d.count/max*100)}%;min-height:2px"></div>
+              <div style="font-size:9px;color:var(--muted)">${d.date.slice(5)}</div>
+            </div>
+          `).join('')}
+        </div>`;
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('typeBreakdown').innerHTML = `<div class="error">Failed to load stats: ${e.message}</div>`;
+  }
+}
+
+loadStats();
+setInterval(loadStats, 30000); // Auto-refresh every 30s
+</script>
+</body>
+</html>
