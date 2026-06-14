@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QRCraft — Free Branded QR Code Generator</title>
-<meta name="description" content="Create beautiful branded QR codes with your logo. Generate single URL or multi-link QR codes for free. Download PNG and host your link page.">
-<meta name="keywords" content="qr code generator, branded qr code, free qr code, logo qr code, link page qr code, ad free qr">
+<title>adfreeqr.com — Free QR Code Generator (No Ads)</title>
+<meta name="description" content="Create beautiful branded QR codes with your logo. Free, ad-free, no sign-up. Generate single URL or multi-link QR codes and host link pages free.">
+<meta name="keywords" content="ad free qr code generator, free qr code, branded qr code, logo qr code, multi-link qr, link page, linktree alternative">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-<!-- qrcode-generator gives us direct matrix access — no canvas pixel hacking -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -89,6 +89,17 @@ input[type=color]{width:36px;height:36px;border:1px solid var(--border);border-r
 .divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
 footer{text-align:center;margin-top:3rem;font-size:12px;color:var(--muted)}
 footer a{color:var(--accent2);text-decoration:none}
+
+/* hosting mode toggle */
+.host-toggle{display:flex;flex-direction:column;gap:8px}
+.host-opt{display:flex;gap:10px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);cursor:pointer;transition:all .15s;align-items:flex-start}
+.host-opt:hover{border-color:var(--border2)}
+.host-opt.active{border-color:var(--accent);background:var(--accentglow)}
+.host-opt input[type=radio]{margin-top:2px;flex-shrink:0;accent-color:var(--accent)}
+.host-opt strong{display:block;font-size:13px;color:var(--text);margin-bottom:2px}
+.host-opt span{font-size:11px;color:var(--muted);line-height:1.5}
+
+.generated-url{background:var(--surface2);border:1px solid var(--accent);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:12px;color:var(--accent2);word-break:break-all;line-height:1.5}
 </style>
 </head>
 <body>
@@ -96,7 +107,7 @@ footer a{color:var(--accent2);text-decoration:none}
 <header>
   <div class="logo-mark">⬡</div>
   <div>
-    <h1>QRCraft</h1>
+    <h1>adfreeqr.com</h1>
     <p>Free branded QR code generator — no sign-up, no watermarks, no ads</p>
   </div>
 </header>
@@ -194,15 +205,50 @@ footer a{color:var(--accent2);text-decoration:none}
         </div>
       </div>
       <hr class="divider">
-      <div class="card-title">Step 2 — Hosting URL</div>
-      <div class="info-box" style="margin-bottom:10px">
-        <span class="step-num">1</span> Download link page &amp; host it on your server<br>
-        <span class="step-num">2</span> Paste the <strong>live URL</strong> here, then generate QR
+      <div class="card-title">Hosting</div>
+
+      <div class="host-toggle">
+        <label class="host-opt active" id="hostOptFree">
+          <input type="radio" name="hostMode" value="free" checked onchange="updateHostingMode()">
+          <div>
+            <strong>Free hosting on adfreeqr.com</strong>
+            <span>Your link page lives forever at a unique adfreeqr.com URL — no setup needed</span>
+          </div>
+        </label>
+        <label class="host-opt" id="hostOptCustom">
+          <input type="radio" name="hostMode" value="custom" onchange="updateHostingMode()">
+          <div>
+            <strong>Use my own URL</strong>
+            <span>Download the link page HTML and host it yourself</span>
+          </div>
+        </label>
       </div>
-      <div class="field">
-        <label>Live URL of your hosted link page</label>
-        <input type="url" id="hostUrl" placeholder="https://yourdomain.com/links">
+
+      <!-- Free hosting info -->
+      <div id="freeHostInfo" class="info-box" style="margin-top:10px">
+        <strong style="color:var(--accent2)">✓ Ready to generate</strong><br>
+        <span style="font-size:11px">Your link page URL will appear below after clicking Generate</span>
       </div>
+
+      <!-- Custom URL field -->
+      <div id="customHostBlock" style="display:none">
+        <div class="info-box" style="margin-bottom:10px">
+          <span class="step-num">1</span> Download link page &amp; host it on your server<br>
+          <span class="step-num">2</span> Paste the <strong>live URL</strong> below, then generate QR
+        </div>
+        <div class="field">
+          <label>Live URL of your hosted link page</label>
+          <input type="url" id="hostUrl" placeholder="https://yourdomain.com/links">
+        </div>
+      </div>
+
+      <!-- Generated URL display -->
+      <div id="generatedUrlBlock" style="display:none;margin-top:10px">
+        <label>Your hosted link page URL</label>
+        <div class="generated-url" id="generatedUrl"></div>
+        <button class="btn-secondary" onclick="copyGeneratedUrl()" style="margin-top:6px">📋 Copy URL</button>
+      </div>
+
       <button class="btn-primary" onclick="generateQR('multi')">⬡ Generate QR Code</button>
       <button class="btn-secondary" id="dlPageBtn" onclick="downloadPage()" disabled>↓ Download link page (HTML)</button>
       <button class="btn-secondary" id="dlMultiQrBtn" onclick="downloadQR()" disabled>↓ Download QR (PNG)</button>
@@ -240,7 +286,7 @@ footer a{color:var(--accent2);text-decoration:none}
   </div>
 </div>
 
-<footer><p>QRCraft — Free, open source, no sign-up required. <a href="https://github.com/dipudevarajan/qr-generator">GitHub</a></p></footer>
+<footer><p>adfreeqr.com — Free, open source, no sign-up required. <a href="https://github.com/dipudevarajan/qr-generator">GitHub</a></p></footer>
 
 <script>
 // ── State ──────────────────────────────────────────────────────────
@@ -379,8 +425,37 @@ function generateQR(mode) {
   } else {
     currentHTML = buildPageHTML();
     document.getElementById('dlPageBtn').disabled = false;
-    url = document.getElementById('hostUrl').value.trim();
-    if (!url) { alert('Please download & host the link page first, then paste the live URL.'); return; }
+
+    const hostMode = document.querySelector('input[name=hostMode]:checked').value;
+
+    if (hostMode === 'free') {
+      // Encode link data into URL hash on adfreeqr.com/p/
+      const data = buildLinkPageData();
+      if (!data.l || data.l.length === 0) {
+        alert('Please add at least one link first.');
+        return;
+      }
+      const json = JSON.stringify(data);
+      const compressed = LZString.compressToEncodedURIComponent(json);
+      url = location.origin + '/p/#d=' + compressed;
+
+      // Show the generated URL to the user
+      const block = document.getElementById('generatedUrlBlock');
+      const display = document.getElementById('generatedUrl');
+      display.textContent = url;
+      block.style.display = 'block';
+
+      // Warn if URL is too long for reliable QR scanning
+      if (url.length > 1800) {
+        alert('Heads up: your link page is large (' + url.length + ' chars) — the QR code will be very dense and harder to scan. Consider using a URL-based logo instead of uploaded image, or fewer links.');
+      }
+    } else {
+      // Custom URL mode
+      url = document.getElementById('hostUrl').value.trim();
+      if (!url) { alert('Please paste your hosted link page URL first.'); return; }
+      document.getElementById('generatedUrlBlock').style.display = 'none';
+    }
+
     currentDot = document.getElementById('multiDotColor').value;
     currentBg  = '#ffffff';
   }
@@ -388,10 +463,56 @@ function generateQR(mode) {
   try {
     currentMatrix = getQRMatrix(url);
     renderQR(currentMatrix, logoImg[mode], currentDot, currentBg);
+    trackGeneration(mode); // fire and forget analytics
   } catch(e) {
-    alert('Could not generate QR. URL may be too long — try shortening it.');
+    alert('Could not generate QR. URL may be too long — try simplifying your link page or use custom hosting.');
     console.error(e);
   }
+}
+
+function updateHostingMode() {
+  const mode = document.querySelector('input[name=hostMode]:checked').value;
+  document.getElementById('hostOptFree').classList.toggle('active', mode === 'free');
+  document.getElementById('hostOptCustom').classList.toggle('active', mode === 'custom');
+  document.getElementById('freeHostInfo').style.display = mode === 'free' ? 'block' : 'none';
+  document.getElementById('customHostBlock').style.display = mode === 'custom' ? 'block' : 'none';
+  document.getElementById('generatedUrlBlock').style.display = 'none';
+}
+
+function copyGeneratedUrl() {
+  const url = document.getElementById('generatedUrl').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = event.target;
+    const original = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = original, 1500);
+  });
+}
+
+// Build compact data object for URL encoding (short keys to save space)
+function buildLinkPageData() {
+  const data = {
+    n: document.getElementById('brandName').value || 'My Brand',
+    t: document.getElementById('brandTag').value || '',
+    a: document.getElementById('multiAccent').value,
+    l: getLinks().map(x => ({ b: x.label, u: x.url }))
+  };
+  // Only include logo if user uploaded one — keep URL short by warning about size
+  if (logoData.multi) {
+    data.i = logoData.multi;
+  }
+  return data;
+}
+
+// Fire-and-forget tracking
+function trackGeneration(mode) {
+  try {
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: mode })
+    }).catch(() => {}); // silent fail — analytics never breaks UX
+  } catch(e) {}
 }
 
 // ── Render ─────────────────────────────────────────────────────────
