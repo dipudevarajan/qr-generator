@@ -1,63 +1,43 @@
-# QRCraft — Free Branded QR Code Generator
+# adfreeqr.com — Free Branded QR Code Generator
 
-A fully self-contained, single-file QR code generator with no backend, no sign-up, and no watermarks.
+Live: **https://adfreeqr.com**
+
+Free, open source, ad-free QR code generator with branded logos, custom colors, and a hosted link-page feature.
 
 ## Features
 
-- **Single URL mode** — Paste any URL and generate a styled QR instantly
-- **Multi-Link Page mode** — Build a Linktree-style landing page with multiple links, download the HTML, host it, then generate a QR pointing to it
-- **Logo upload** — Upload any PNG/SVG/JPG to embed in the center of your QR code
-- **Color customization** — Pick QR dot color, background color, and button accent color
-- **Live preview** — See the phone preview update in real time
-- **Download QR** — Exports as a high-resolution PNG (520×520)
-- **Download link page** — Self-contained HTML file, ready to host anywhere
-- **No external dependencies** — Only uses `qrcode.js` from cdnjs (no backend needed)
+- **Single URL mode** — generate a styled QR for any URL
+- **Multi-Link Page mode** — create a Linktree-style link page with multiple URLs
+- **Free hosting** — link pages hosted on adfreeqr.com (data encoded in URL hash, no server storage)
+- **Custom hosting** — download the HTML and host on your own server
+- **Logo upload** — embed a logo in the QR center
+- **Analytics dashboard** — admin panel at `/admin/` with generation count, country breakdown, daily charts
 
-## Hosting with Caddy
-
-```caddyfile
-yourdomain.com {
-    root * /var/www/qrcraft
-    file_server
-}
-```
-
-Drop `index.html` into `/var/www/qrcraft/` and you're done.
-
-## Multi-Link Page Workflow
-
-1. Fill in your brand name, tagline, logo, and links
-2. Click **Download link page (HTML)** — save as `links.html`
-3. Host `links.html` on your server (e.g. `yourdomain.com/links`)
-4. Paste the live URL into the **Hosting URL** field
-5. Click **Generate QR Code** — download the PNG
-
-## Self-hosting the link page alongside the generator
-
-If you want both on the same server:
+## Project structure
 
 ```
-/var/www/qrcraft/
-  index.html      ← QR generator
-  links.html      ← Generated link page (upload after creating)
+qr-generator/
+├── index.html          # Main app
+├── p/index.html        # Link page viewer (reads encoded data from URL hash)
+├── admin/index.html    # Analytics dashboard
+├── api/                # Analytics backend
+│   ├── server.js
+│   ├── package.json
+│   └── Dockerfile
+└── README.md
 ```
 
-Then your QR points to `https://yourdomain.com/links`.
+## How free hosting works
 
-## Domain suggestions
+When users choose "Host on adfreeqr.com":
+1. Link page data is serialized → LZ-compressed → URL-safe base64
+2. Result appended to `/p/#d=<encoded>`
+3. Viewer at `/p/` decodes and renders client-side
+4. No server storage, no database, links live forever
 
-- `qrcraft.io` ✨
-- `linkqr.io`
-- `qrhub.app`
-- `qrpages.io`
-- `snaplink.app`
+## Deployment
 
-## Tech stack
-
-- Pure HTML + CSS + Vanilla JS
-- [qrcodejs](https://github.com/davidshimjs/qrcodejs) via cdnjs
-- Google Fonts (Inter + Space Grotesk)
-- Zero build step — deploy as-is
+See the project for full Caddy + Docker setup. Auto-deploys via GitHub webhook → server.
 
 ## License
 
