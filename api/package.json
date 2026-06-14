@@ -1,0 +1,15 @@
+{
+  "name": "adfreeqr-api",
+  "version": "1.0.0",
+  "description": "Tiny analytics API for adfreeqr.com",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
