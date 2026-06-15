@@ -235,6 +235,7 @@ input[type=color]{width:38px;height:38px;border:1px solid var(--border);backgrou
       </div>
       <button class="btn-primary" onclick="generateQR('single')">Generate QR code →</button>
       <button class="btn-secondary" id="dlSingleQrBtn" onclick="downloadQR()" disabled>Download QR (PNG)</button>
+      <button class="btn-secondary" id="dlSingleSvgBtn" onclick="downloadQRSvg()" disabled>Download QR (SVG)</button>
     </div>
 
     <!-- MULTI MODE -->
@@ -327,6 +328,7 @@ input[type=color]{width:38px;height:38px;border:1px solid var(--border);backgrou
       <button class="btn-primary" onclick="generateQR('multi')">Generate QR code →</button>
       <button class="btn-secondary" id="dlPageBtn" onclick="downloadPage()" disabled>Download link page (HTML)</button>
       <button class="btn-secondary" id="dlMultiQrBtn" onclick="downloadQR()" disabled>Download QR (PNG)</button>
+      <button class="btn-secondary" id="dlMultiSvgBtn" onclick="downloadQRSvg()" disabled>Download QR (SVG)</button>
     </div>
   </div>
 
@@ -697,6 +699,8 @@ function renderQR(matrix, logo, dotColor, bgColor) {
   document.getElementById('qrHint').textContent = '✓ Done! Scan to test before downloading.';
   document.getElementById('dlSingleQrBtn').disabled = false;
   document.getElementById('dlMultiQrBtn').disabled = false;
+  document.getElementById('dlSingleSvgBtn').disabled = false;
+  document.getElementById('dlMultiSvgBtn').disabled = false;
 }
 
 function roundRect(ctx, x, y, w, h, r) {
@@ -729,6 +733,8 @@ function resetCanvas() {
   document.getElementById('qrHint').textContent = 'Fill in the details and click Generate';
   document.getElementById('dlSingleQrBtn').disabled = true;
   document.getElementById('dlMultiQrBtn').disabled = true;
+  document.getElementById('dlSingleSvgBtn').disabled = true;
+  document.getElementById('dlMultiSvgBtn').disabled = true;
 }
 
 // ── Downloads ──────────────────────────────────────────────────────
@@ -737,6 +743,87 @@ function downloadQR() {
   a.href = document.getElementById('qr-canvas').toDataURL('image/png');
   a.download = 'adfreeqr-code.png';
   a.click();
+}
+
+function downloadQRSvg() {
+  if (!currentMatrix) return;
+  const svg = buildQRSvg(currentMatrix, logoData[currentMode], currentDot, currentBg);
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'adfreeqr-code.svg';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+// Build a high-quality SVG matching the canvas render
+function buildQRSvg(matrix, logoDataUrl, dotColor, bgColor) {
+  const SIZE = 540;
+  const QUIET = 4;
+  const mods = matrix.length;
+  const totalMods = mods + QUIET * 2;
+  const cell = SIZE / totalMods;
+
+  const isFinderRegion = (r, c) => (r < 8 && c < 8) || (r < 8 && c >= mods-8) || (r >= mods-8 && c < 8);
+
+  let svg = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  svg += `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}" shape-rendering="geometricPrecision">\n`;
+
+  // Background — rounded rect
+  svg += `  <rect x="0" y="0" width="${SIZE}" height="${SIZE}" rx="16" ry="16" fill="${bgColor}"/>\n`;
+
+  // Data dots — group with single fill, build path
+  svg += `  <g fill="${dotColor}">\n`;
+  const s = cell * 0.85;
+  const o = (cell - s) / 2;
+  const radius = s * 0.3;
+
+  for (let r = 0; r < mods; r++) {
+    for (let c = 0; c < mods; c++) {
+      if (!matrix[r][c] || isFinderRegion(r, c)) continue;
+      const x = (c + QUIET) * cell + o;
+      const y = (r + QUIET) * cell + o;
+      svg += `    <rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${s.toFixed(2)}" height="${s.toFixed(2)}" rx="${radius.toFixed(2)}" ry="${radius.toFixed(2)}"/>\n`;
+    }
+  }
+
+  // Finder patterns
+  const drawFinder = (row, col) => {
+    const x = (col + QUIET) * cell;
+    const y = (row + QUIET) * cell;
+    const sz = 7 * cell;
+    const r = sz * 0.15;
+    const gap = cell;
+    const inner = cell * 3;
+    const io = (sz - inner) / 2;
+
+    let out = '';
+    out += `    <rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${sz.toFixed(2)}" height="${sz.toFixed(2)}" rx="${r.toFixed(2)}" ry="${r.toFixed(2)}" fill="${dotColor}"/>\n`;
+    out += `    <rect x="${(x+gap).toFixed(2)}" y="${(y+gap).toFixed(2)}" width="${(sz-gap*2).toFixed(2)}" height="${(sz-gap*2).toFixed(2)}" rx="${(r*0.5).toFixed(2)}" ry="${(r*0.5).toFixed(2)}" fill="${bgColor}"/>\n`;
+    out += `    <rect x="${(x+io).toFixed(2)}" y="${(y+io).toFixed(2)}" width="${inner.toFixed(2)}" height="${inner.toFixed(2)}" rx="${(r*0.3).toFixed(2)}" ry="${(r*0.3).toFixed(2)}" fill="${dotColor}"/>\n`;
+    return out;
+  };
+  svg += `  </g>\n`;
+  svg += drawFinder(0, 0);
+  svg += drawFinder(0, mods - 7);
+  svg += drawFinder(mods - 7, 0);
+
+  // Logo (if provided) — embedded as data URI, clipped to circle
+  if (logoDataUrl) {
+    const logoSz = SIZE * 0.16;
+    const pad    = logoSz * 0.3;
+    const bgSz   = logoSz + pad * 2;
+    const cx = SIZE / 2;
+    const cy = SIZE / 2;
+
+    svg += `    <circle cx="${cx}" cy="${cy}" r="${bgSz/2}" fill="${bgColor}"/>\n`;
+    svg += `    <clipPath id="logoClip"><circle cx="${cx}" cy="${cy}" r="${logoSz/2}"/></clipPath>\n`;
+    svg += `    <image href="${logoDataUrl}" x="${cx-logoSz/2}" y="${cy-logoSz/2}" width="${logoSz}" height="${logoSz}" clip-path="url(#logoClip)" preserveAspectRatio="xMidYMid slice"/>\n`;
+  }
+
+  svg += `</svg>\n`;
+  return svg;
 }
 function downloadPage() {
   if (!currentHTML) currentHTML = buildPageHTML();
