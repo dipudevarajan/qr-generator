@@ -9,10 +9,11 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f6fb;padding:2rem 1rem}
 .card{background:#fff;border-radius:22px;padding:2.25rem 1.75rem;max-width:400px;width:100%;text-align:center;box-shadow:0 4px 32px rgba(0,0,0,.1)}
+.brand-head{margin-bottom:2rem}
 .brand-logo{width:76px;height:76px;border-radius:18px;object-fit:contain;margin:0 auto 1rem;display:block;border:1px solid #eee;background:#fff}
 .brand-letter{width:76px;height:76px;border-radius:18px;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#fff}
 h1{font-size:22px;font-weight:700;color:#111;margin-bottom:4px}
-.tag{font-size:14px;color:#888;margin-bottom:2rem}
+.tag{font-size:14px;color:#888}
 .links{display:flex;flex-direction:column;gap:10px}
 a.link-btn{display:flex;align-items:center;justify-content:center;padding:14px 18px;border-radius:12px;border:2px solid currentColor;font-size:15px;font-weight:600;text-decoration:none;background:#fafafa;transition:all .18s}
 a.link-btn:hover{transform:translateY(-1px);filter:brightness(0.95)}
@@ -44,22 +45,27 @@ function escapeHTML(s) {
 }
 
 function render(data) {
-  const name = escapeHTML(data.n || 'Link Page');
-  const tag = escapeHTML(data.t || '');
+  const name = escapeHTML(data.n || '').trim();
+  const tag  = escapeHTML(data.t || '').trim();
   const accent = (data.a || '#6c63ff').replace(/[^#0-9a-fA-F]/g,'').slice(0,7);
   const links = (data.l || []).filter(x => x && x.u);
   const logo = data.i || '';
+  const hasBrand = !!(name || tag || logo);
 
-  document.title = name + (tag ? ' — ' + tag : '');
-  document.querySelector('meta[name=description]').content = tag || name;
+  // Page title — fallback to first link or generic
+  const pageTitle = name || (links[0] && links[0].b) || 'Links';
+  document.title = name ? (tag ? name + ' — ' + tag : name) : pageTitle;
+  document.querySelector('meta[name=description]').content = tag || name || 'Link page';
 
+  // Only show logo/letter if user provided branding intent
   let logoHTML = '';
   if (logo && /^https?:\/\//.test(logo)) {
-    logoHTML = `<img src="${escapeHTML(logo)}" class="brand-logo" alt="${name}" onerror="this.style.display='none'">`;
+    logoHTML = `<img src="${escapeHTML(logo)}" class="brand-logo" alt="${name || 'logo'}" onerror="this.style.display='none'">`;
   } else if (logo && logo.startsWith('data:image/')) {
-    logoHTML = `<img src="${logo}" class="brand-logo" alt="${name}">`;
-  } else {
-    const letter = (name[0] || 'A').toUpperCase();
+    logoHTML = `<img src="${logo}" class="brand-logo" alt="${name || 'logo'}">`;
+  } else if (name) {
+    // Only show letter avatar if user gave a name
+    const letter = name[0].toUpperCase();
     logoHTML = `<div class="brand-letter" style="background:${accent}">${letter}</div>`;
   }
 
@@ -69,10 +75,16 @@ function render(data) {
     return `<a class="link-btn" href="${url}" target="_blank" rel="noopener" style="color:${accent};border-color:${accent}33">${label}</a>`;
   }).join('');
 
+  const headerHTML = hasBrand ? `
+    <div class="brand-head">
+      ${logoHTML}
+      ${name ? `<h1>${name}</h1>` : ''}
+      ${tag ? `<p class="tag">${tag}</p>` : ''}
+    </div>
+  ` : '';
+
   document.getElementById('card').innerHTML = `
-    ${logoHTML}
-    <h1>${name}</h1>
-    ${tag ? `<p class="tag">${tag}</p>` : ''}
+    ${headerHTML}
     <div class="links">${linksHTML || '<p style="color:#999;font-size:13px">No links yet.</p>'}</div>
     <p class="footer">Made with <a href="/" target="_blank">adfreeqr.com</a></p>
   `;
