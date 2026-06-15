@@ -241,8 +241,8 @@ input[type=color]{width:38px;height:38px;border:1px solid var(--border);backgrou
     <div class="card mode-panel" id="panel-multi">
       <div class="card-title">Brand</div>
       <div class="field row2">
-        <div><label>Brand / Page name</label><input type="text" id="brandName" placeholder="Your Brand" oninput="livePreviewMulti()"></div>
-        <div><label>Tagline</label><input type="text" id="brandTag" placeholder="Your tagline here" oninput="livePreviewMulti()"></div>
+        <div><label>Brand / Page name <span style="color:var(--muted);text-transform:none;letter-spacing:normal;font-family:var(--body);font-size:11px;font-weight:400">(optional)</span></label><input type="text" id="brandName" placeholder="e.g. Acme Co." oninput="livePreviewMulti()"></div>
+        <div><label>Tagline <span style="color:var(--muted);text-transform:none;letter-spacing:normal;font-family:var(--body);font-size:11px;font-weight:400">(optional)</span></label><input type="text" id="brandTag" placeholder="e.g. Quality tools since 1992" oninput="livePreviewMulti()"></div>
       </div>
       <div class="field">
         <label>Logo (shown on link page &amp; optional QR center)</label>
@@ -461,8 +461,26 @@ function getLinks() {
 }
 function esc(s){return s.replace(/"/g,'&quot;').replace(/</g,'&lt;')}
 function livePreviewMulti() {
-  document.getElementById('prevName').textContent=document.getElementById('brandName').value||'Your Brand';
-  document.getElementById('prevTag').textContent=document.getElementById('brandTag').value||'Your tagline here';
+  const name = document.getElementById('brandName').value.trim();
+  const tag  = document.getElementById('brandTag').value.trim();
+  const hasLogo = !!logoData.multi;
+  const hasBrand = !!(name || tag || hasLogo);
+
+  const head = document.querySelector('#previewMulti .phone-head');
+  const prevName = document.getElementById('prevName');
+  const prevTag  = document.getElementById('prevTag');
+  const prevLogo = document.getElementById('prevLogoImg');
+
+  // Hide entire header if user provided nothing
+  head.style.display = hasBrand ? 'block' : 'none';
+
+  // Show / hide individual elements
+  prevName.style.display = name ? 'block' : 'none';
+  prevName.textContent = name;
+  prevTag.style.display = tag ? 'block' : 'none';
+  prevTag.textContent = tag;
+  prevLogo.style.display = hasLogo ? 'block' : 'none';
+
   const accent=document.getElementById('multiAccent').value;
   const c=document.getElementById('prevLinks'); c.innerHTML='';
   getLinks().forEach(l=>{
@@ -566,16 +584,15 @@ function copyGeneratedUrl() {
 
 // Build compact data object for URL encoding (short keys to save space)
 function buildLinkPageData() {
+  const brandName = document.getElementById('brandName').value.trim();
+  const brandTag  = document.getElementById('brandTag').value.trim();
   const data = {
-    n: document.getElementById('brandName').value || 'My Brand',
-    t: document.getElementById('brandTag').value || '',
     a: document.getElementById('multiAccent').value,
     l: getLinks().map(x => ({ b: x.label, u: x.url }))
   };
-  // Only include logo if user uploaded one — keep URL short by warning about size
-  if (logoData.multi) {
-    data.i = logoData.multi;
-  }
+  if (brandName) data.n = brandName;
+  if (brandTag)  data.t = brandTag;
+  if (logoData.multi) data.i = logoData.multi;
   return data;
 }
 
@@ -731,25 +748,32 @@ function downloadPage() {
 
 // ── Link Page Builder ──────────────────────────────────────────────
 function buildPageHTML() {
-  const name   = document.getElementById('brandName').value || 'My Brand';
-  const tag    = document.getElementById('brandTag').value  || '';
+  const name   = document.getElementById('brandName').value.trim();
+  const tag    = document.getElementById('brandTag').value.trim();
   const links  = getLinks();
   const accent = document.getElementById('multiAccent').value;
-  const logo   = logoData.multi ? `<img src="${logoData.multi}" class="brand-logo" alt="${name}">` : '';
+  const logo   = logoData.multi ? `<img src="${logoData.multi}" class="brand-logo" alt="${name||'logo'}">` : '';
+
+  // Page title — use brand if available, otherwise generic
+  const pageTitle = name ? (tag ? `${name} — ${tag}` : name) : 'Links';
+  const pageDesc  = tag || name || 'Link page';
+  const hasHeader = name || tag || logo;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${name}${tag?' — '+tag:''}</title>
-<meta name="description" content="${tag||name}">
+<title>${pageTitle}</title>
+<meta name="description" content="${pageDesc}">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f6fb;padding:2rem 1rem}
 .card{background:#fff;border-radius:22px;padding:2.25rem 1.75rem;max-width:400px;width:100%;text-align:center;box-shadow:0 4px 32px rgba(0,0,0,.1)}
 .brand-logo{width:76px;height:76px;border-radius:18px;object-fit:contain;margin:0 auto 1rem;display:block;border:1px solid #eee}
+.brand-head{margin-bottom:2rem}
 h1{font-size:22px;font-weight:700;color:#111;margin-bottom:4px}
-.tag{font-size:14px;color:#888;margin-bottom:2rem}
+.tag{font-size:14px;color:#888}
 .links{display:flex;flex-direction:column;gap:10px}
 a.link-btn{display:flex;align-items:center;justify-content:center;padding:14px 18px;border-radius:12px;border:2px solid ${accent}33;color:#111;font-size:15px;font-weight:600;text-decoration:none;background:#fafafa;transition:all .18s}
 a.link-btn:hover{background:${accent}15;border-color:${accent};transform:translateY(-1px)}
@@ -758,13 +782,15 @@ a.link-btn:hover{background:${accent}15;border-color:${accent};transform:transla
 </head>
 <body>
 <div class="card">
-  ${logo}
-  <h1>${name}</h1>
-  ${tag?`<p class="tag">${tag}</p>`:''}
+  ${hasHeader ? `<div class="brand-head">
+    ${logo}
+    ${name ? `<h1>${name}</h1>` : ''}
+    ${tag ? `<p class="tag">${tag}</p>` : ''}
+  </div>` : ''}
   <div class="links">
     ${links.map(l=>`<a class="link-btn" href="${l.url}" target="_blank" rel="noopener">${l.label||l.url}</a>`).join('\n    ')}
   </div>
-  <p class="footer">© ${new Date().getFullYear()} ${name}</p>
+  <p class="footer">${name ? `© ${new Date().getFullYear()} ${name}` : 'Made with adfreeqr.com'}</p>
 </div>
 </body>
 </html>`;
