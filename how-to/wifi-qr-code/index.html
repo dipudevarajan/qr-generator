@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>How to Make a Wi-Fi QR Code (Free, No App Needed)</title>
+<meta name="description" content="Create a Wi-Fi QR code that lets guests join your network by scanning — no typing passwords. Free, no sign-up, works for WPA, WPA2, WPA3 and open networks.">
+<meta name="keywords" content="wifi qr code, wifi qr code generator, how to make wifi qr code, share wifi qr code, wifi password qr code, guest wifi qr code">
+<link rel="canonical" href="https://adfreeqr.com/how-to/wifi-qr-code/">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://adfreeqr.com/how-to/wifi-qr-code/">
+<meta property="og:title" content="How to Make a Wi-Fi QR Code (Free, No App)">
+<meta property="og:description" content="Turn your Wi-Fi credentials into a scannable QR code. Guests join instantly — no typing passwords.">
+<meta property="og:image" content="https://adfreeqr.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Make a Wi-Fi QR Code",
+  "description": "Create a QR code that connects phones to your Wi-Fi network without typing the password.",
+  "totalTime": "PT2M",
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Enter your Wi-Fi details", "text": "Type your Wi-Fi network name (SSID), password, and select the security type (WPA, WPA2, WPA3, or none)." },
+    { "@type": "HowToStep", "position": 2, "name": "Copy the generated Wi-Fi string", "text": "The tool converts your credentials into a properly formatted WIFI: string that any QR reader recognizes." },
+    { "@type": "HowToStep", "position": 3, "name": "Generate the QR code", "text": "Paste the string into the QR generator and download the PNG or SVG. Print it and stick it wherever guests need to join." }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Does a Wi-Fi QR code work on iPhone and Android?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. All iPhones since iOS 11 (2017) and all Android phones running Android 10 or later can join Wi-Fi networks by scanning a QR code with the built-in camera app. No third-party app is needed." }},
+    { "@type": "Question", "name": "Is the password visible in the QR code?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The password is encoded in plain text inside the QR code. Anyone who scans it — or takes a photo of it — can extract the password using any QR decoder. Only use these for networks you are happy for guests to share." }},
+    { "@type": "Question", "name": "Should I use WPA, WPA2, or WPA3?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Choose whichever your router is configured with. WPA2 is the most common for home and small business routers. WPA3 is newer and more secure but not all devices support it. Use WPA for very old networks. Choose No password only for genuinely open networks." }},
+    { "@type": "Question", "name": "Can I make a QR for a hidden network?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes — check the Hidden network option. The QR string will include H:true so scanning devices know to look for a network that does not broadcast its name." }},
+    { "@type": "Question", "name": "Do I have to give my email or sign up?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. adfreeqr.com is completely free with no account, no email, no watermark. The Wi-Fi string is built entirely in your browser — your password never leaves your device." }}
+  ]
+}
+</script>
+
+<link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/bricolage-grotesque-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FFFFFF;--surface:#FAFAFA;--text:#0A0A0A;--text-soft:#6B6B6B;
+  --border:#E5E5E5;--accent:#FF3C00;--black:#000000;
+  --display:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--text);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+nav .inner{max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:18px;color:var(--text);letter-spacing:-0.02em}
+.brand-mark{width:22px;height:22px;background:var(--black);position:relative;flex-shrink:0}
+.brand-mark::before,.brand-mark::after,.brand-mark span{content:'';position:absolute;width:6px;height:6px;background:#fff}
+.brand-mark::before{top:4px;left:4px}
+.brand-mark::after{top:4px;right:4px}
+.brand-mark span{bottom:4px;left:4px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:var(--text);color:#fff !important;text-decoration:none;font-size:14px;font-weight:500;border:1px solid var(--text);transition:all .18s;font-family:var(--body);cursor:pointer}
+.btn:hover{background:var(--accent);border-color:var(--accent)}
+.btn.btn-lg{padding:16px 28px;font-size:16px}
+.btn.btn-accent{background:var(--accent);border-color:var(--accent)}
+
+.crumb{font-family:var(--mono);font-size:12px;color:var(--text-soft);letter-spacing:0.06em}
+.crumb a{color:var(--text-soft);text-decoration:none}
+.crumb a:hover{color:var(--accent)}
+
+article{padding:56px 0 96px}
+.eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-soft);margin-bottom:20px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(38px,5.5vw,58px);line-height:1;letter-spacing:-0.03em;margin-bottom:24px}
+h1 .accent{color:var(--accent)}
+.deck{font-size:19px;color:var(--text-soft);line-height:1.55;max-width:640px;margin-bottom:48px}
+h2{font-family:var(--display);font-weight:700;font-size:30px;letter-spacing:-0.02em;line-height:1.15;margin:56px 0 18px}
+h3{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-0.02em;margin:28px 0 10px}
+p{font-size:16px;line-height:1.7;margin-bottom:16px}
+p.muted{color:var(--text-soft)}
+article ul{margin:0 0 20px 0;padding-left:22px}
+article ul li{font-size:16px;line-height:1.7;margin-bottom:6px}
+article ul li::marker{color:var(--accent)}
+article ol{margin:0 0 20px 0;padding-left:22px}
+article ol li{font-size:16px;line-height:1.7;margin-bottom:10px}
+article ol li::marker{color:var(--accent);font-weight:700}
+
+code{font-family:var(--mono);background:var(--surface);padding:2px 6px;font-size:13px;border:1px solid var(--border);white-space:nowrap}
+pre{font-family:var(--mono);background:var(--surface);border:1px solid var(--border);padding:14px 16px;font-size:13px;overflow-x:auto;margin:16px 0;line-height:1.5}
+pre code{background:none;border:none;padding:0;white-space:pre}
+
+/* ── Interactive Wi-Fi string builder ── */
+.builder{background:var(--surface);border:1px solid var(--border);padding:28px;margin:32px 0}
+.builder .card-title{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.builder .card-title::before{content:'';width:8px;height:8px;background:var(--accent)}
+.builder label{display:block;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--text-soft);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;margin-top:14px}
+.builder label:first-of-type{margin-top:0}
+.builder input[type=text],.builder input[type=password],.builder select{width:100%;padding:11px 14px;background:#fff;border:1px solid var(--border);color:var(--text);font-size:14px;font-family:var(--body);outline:none;border-radius:0;transition:border-color .15s}
+.builder input:focus,.builder select:focus{border-color:var(--accent)}
+.builder .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.builder .checkbox-row{margin-top:14px;display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text)}
+.builder .checkbox-row input{width:16px;height:16px;accent-color:var(--accent)}
+.builder .output-block{background:var(--black);color:#fff;padding:14px 16px;margin-top:20px;font-family:var(--mono);font-size:13px;word-break:break-all;line-height:1.5;position:relative}
+.builder .output-block .label{color:var(--accent);font-size:10px;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;display:block}
+.builder .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.builder .btn-primary{padding:12px 20px;background:var(--accent);color:#fff;border:1px solid var(--accent);font-family:var(--body);font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.01em;transition:all .15s;text-decoration:none;text-align:center}
+.builder .btn-primary:hover{background:var(--black);border-color:var(--black)}
+.builder .btn-copy{padding:12px 20px;background:transparent;color:var(--text);border:1px solid var(--border);font-family:var(--body);font-size:14px;font-weight:600;cursor:pointer;letter-spacing:-0.01em;transition:all .15s}
+.builder .btn-copy:hover{border-color:var(--accent);color:var(--accent)}
+.builder .btn-copy.copied{border-color:var(--accent);color:var(--accent)}
+
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:20px 24px;margin:28px 0}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text)}
+
+.faq{margin:24px 0}
+.faq details{border-bottom:1px solid var(--border);padding:0}
+.faq summary{padding:20px 0;cursor:pointer;font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-0.02em;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';font-family:var(--display);font-weight:500;font-size:24px;color:var(--accent);transition:transform .25s;line-height:1;flex-shrink:0}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding-bottom:20px;color:var(--text-soft);font-size:15px;line-height:1.65;max-width:680px}
+
+.cta-row{margin:56px 0 0;padding:36px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.cta-row p{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-0.02em;margin:0}
+
+footer{padding:48px 0;border-top:1px solid var(--border)}
+footer .legal{font-family:var(--mono);font-size:11px;color:var(--text-soft);letter-spacing:0.04em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+footer a{color:var(--accent);text-decoration:none}
+
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a href="/" class="brand"><span class="brand-mark"><span></span></span>adfreeqr.com</a>
+    <a href="/generate" class="btn">Open generator →</a>
+  </div>
+</nav>
+
+<article>
+  <div class="wrap">
+    <p class="crumb"><a href="/">adfreeqr.com</a> / how-to / <span>wifi-qr-code</span></p>
+    <p class="eyebrow" style="margin-top:24px">Tutorial · 2 min read</p>
+    <h1>How to make a <span class="accent">Wi-Fi QR code</span> that guests just scan.</h1>
+    <p class="deck">
+      Stop dictating your Wi-Fi password to visitors. A Wi-Fi QR code lets anyone with an iPhone or Android connect instantly by pointing their camera at a small square. Here's how — no app, no sign-up.
+    </p>
+
+    <h2>The short version</h2>
+    <p>A Wi-Fi QR code is a regular QR code that encodes a specific text format: <code>WIFI:S:NetworkName;T:WPA;P:password;;</code>. Modern phones recognize this format and offer to join the network automatically. To make one, fill in the form below, then copy the string into any QR generator.</p>
+
+    <!-- ── INTERACTIVE BUILDER ── -->
+    <div class="builder" id="wifiBuilder">
+      <div class="card-title">Wi-Fi credentials</div>
+
+      <label for="ssid">Network name (SSID)</label>
+      <input type="text" id="ssid" placeholder="e.g. Home_WiFi" autocomplete="off">
+
+      <label for="password">Password</label>
+      <input type="text" id="password" placeholder="Leave blank for open networks" autocomplete="off">
+
+      <div class="row2">
+        <div>
+          <label for="security">Security</label>
+          <select id="security">
+            <option value="WPA">WPA / WPA2</option>
+            <option value="WPA3">WPA3</option>
+            <option value="WEP">WEP (old)</option>
+            <option value="nopass">No password (open)</option>
+          </select>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <div class="checkbox-row">
+            <input type="checkbox" id="hidden">
+            <label for="hidden" style="margin:0;text-transform:none;letter-spacing:0;color:var(--text);font-family:var(--body);font-size:14px">Hidden network</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="output-block">
+        <span class="label">Generated Wi-Fi string</span>
+        <span id="wifiString">WIFI:S:Home_WiFi;T:WPA;P:;;</span>
+      </div>
+
+      <div class="actions">
+        <button class="btn-copy" id="copyBtn" onclick="copyString()">📋 Copy string</button>
+        <a class="btn-primary" id="generateBtn" href="#" onclick="openGenerator(event)">Generate QR code →</a>
+      </div>
+    </div>
+
+    <h2>Step by step</h2>
+    <ol>
+      <li><strong>Fill in the form above</strong> with your Wi-Fi network name (SSID), password, and security type (usually WPA2 for home networks).</li>
+      <li><strong>Copy the generated string</strong> or click <em>Generate QR code</em> to open our free generator with the string pre-filled.</li>
+      <li><strong>Download the QR</strong> as a PNG or SVG, then print it and stick it wherever guests need to see it.</li>
+      <li><strong>Test it</strong> by pointing your phone's camera at it — you should see a notification to join the network.</li>
+    </ol>
+
+    <h2>Where to put your Wi-Fi QR code</h2>
+    <ul>
+      <li><strong>Cafés and restaurants</strong> — table cards or the back of the menu</li>
+      <li><strong>Airbnbs and rentals</strong> — in the welcome book or on the fridge</li>
+      <li><strong>Hotels</strong> — bedside cards</li>
+      <li><strong>Offices</strong> — reception area, meeting rooms, hot-desking spaces</li>
+      <li><strong>Homes</strong> — a small framed print by the door (surprisingly popular)</li>
+      <li><strong>Events and weddings</strong> — printed on the program alongside the venue Wi-Fi</li>
+    </ul>
+
+    <h2>What the Wi-Fi string looks like</h2>
+    <p>Under the hood, a Wi-Fi QR code encodes a text string following a standard format. If your network name is <code>CoffeeShop</code> with password <code>latte2026</code> using WPA2, the string is:</p>
+    <pre><code>WIFI:S:CoffeeShop;T:WPA;P:latte2026;;</code></pre>
+    <p>You can build this string by hand, but the form above handles escaping special characters (like <code>;</code> or <code>\</code> in your password) automatically.</p>
+
+    <div class="callout">
+      <p><strong>Privacy note:</strong> the password is encoded in plain text inside the QR code. Anyone who scans it — or takes a photo of it — can extract the password. Only use Wi-Fi QRs for networks you are happy for guests to share. For sensitive networks (corporate, banking, etc.), stick with typed passwords.</p>
+    </div>
+
+    <h2>Does it work on all phones?</h2>
+    <ul>
+      <li><strong>iPhone:</strong> Yes, since iOS 11 (2017). Point the built-in Camera app at the QR.</li>
+      <li><strong>Android:</strong> Yes, since Android 10 (2019). Use the built-in camera or Google Lens.</li>
+      <li><strong>Older devices:</strong> Any QR reader app will decode the string and show a "Connect to network" option.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Does a Wi-Fi QR code work on iPhone and Android?</summary>
+        <p>Yes. All iPhones since iOS 11 (2017) and all Android phones running Android 10 or later can join Wi-Fi networks by scanning a QR code with the built-in camera app. No third-party app needed.</p>
+      </details>
+      <details>
+        <summary>Is the Wi-Fi password visible in the QR code?</summary>
+        <p>The password is encoded in plain text. Anyone who scans the QR (or takes a photo of it) can extract the password. Only use these for guest-shareable networks.</p>
+      </details>
+      <details>
+        <summary>Should I use WPA, WPA2, or WPA3?</summary>
+        <p>Choose whichever your router is configured with. WPA2 is the most common for home and small business routers. WPA3 is newer and more secure but not all client devices support it. Use WPA for very old networks. Choose "No password" only for genuinely open networks.</p>
+      </details>
+      <details>
+        <summary>Can I make a QR for a hidden network?</summary>
+        <p>Yes — check the "Hidden network" box. The QR string will include <code>H:true</code> so scanning devices know to look for a network that does not broadcast its name.</p>
+      </details>
+      <details>
+        <summary>Do I need to sign up or pay for this?</summary>
+        <p>No. adfreeqr.com is completely free with no account, no email, no watermark. The Wi-Fi string is built in your browser — your password never leaves your device.</p>
+      </details>
+    </div>
+
+    <div class="cta-row">
+      <p>Ready to generate the QR?</p>
+      <a href="#wifiBuilder" class="btn btn-lg btn-accent">Back to builder ↑</a>
+    </div>
+
+  </div>
+</article>
+
+<footer>
+  <div class="wrap">
+    <div class="legal">
+      <span>© 2026 adfreeqr.com · <a href="/">Home</a> · <a href="/generate">Generator</a> · <a href="https://github.com/dipudevarajan/qr-generator">GitHub</a></span>
+      <span>Related: <a href="/how-to/restaurant-menu-qr-code/">Restaurant menu QR</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function escapeWifi(str) {
+  // Wi-Fi QR spec: escape \  ;  ,  "  :
+  return String(str).replace(/([\\;,":])/g, '\\$1');
+}
+
+function buildString() {
+  const ssidRaw = document.getElementById('ssid').value.trim() || 'Home_WiFi';
+  const pw = document.getElementById('password').value;
+  const sec = document.getElementById('security').value;
+  const hidden = document.getElementById('hidden').checked;
+
+  const ssid = escapeWifi(ssidRaw);
+  let str;
+  if (sec === 'nopass') {
+    str = `WIFI:S:${ssid};T:nopass;;`;
+  } else {
+    const p = escapeWifi(pw);
+    // WPA3 uses same T:WPA prefix per spec but some readers accept T:WPA3
+    const tType = sec === 'WPA3' ? 'WPA' : sec;
+    str = `WIFI:S:${ssid};T:${tType};P:${p};;`;
+  }
+  if (hidden) str = str.slice(0, -1) + 'H:true;;';
+  return str;
+}
+
+function updateOutput() {
+  document.getElementById('wifiString').textContent = buildString();
+  const btn = document.getElementById('copyBtn');
+  btn.classList.remove('copied');
+  btn.textContent = '📋 Copy string';
+}
+
+['ssid','password','security','hidden'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', updateOutput);
+  el.addEventListener('change', updateOutput);
+});
+
+function copyString() {
+  const str = buildString();
+  navigator.clipboard.writeText(str).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copied to clipboard';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copy string';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(() => {
+    alert('Could not copy — please select the text manually.');
+  });
+}
+
+function openGenerator(e) {
+  e.preventDefault();
+  const str = buildString();
+  // Pass string via URL hash so generator can pre-fill (if wired up)
+  window.location.href = '/generate/#url=' + encodeURIComponent(str);
+}
+
+updateOutput();
+</script>
+
+</body>
+</html>
