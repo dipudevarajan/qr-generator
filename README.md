@@ -34,7 +34,7 @@ When users choose "Host on adfreeqr.com":
 2. Result appended to `/p/#d=<encoded>`
 3. Viewer at `/p/` decodes and renders client-side
 4. No server storage, no database, links live forever
-
+5. test
 ## Deployment
 
 See the project for full Caddy + Docker setup. Auto-deploys via GitHub webhook → server.
